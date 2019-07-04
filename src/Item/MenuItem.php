@@ -210,13 +210,15 @@ class MenuItem
     //region $this->target
     /**
      * @param RouteTarget|string|null $target
+     *
+     * @return MenuItem
      */
-    public function setTarget ($target)
+    public function setTarget ($target) : self
     {
         if ($target instanceof RouteTarget || \is_string($target) || null === $target)
         {
             $this->target = $target;
-            return;
+            return $this;
         }
 
         throw new InvalidTargetException($target);
@@ -281,10 +283,13 @@ class MenuItem
 
     /**
      * @param bool $display
+     *
+     * @return MenuItem
      */
-    public function setDisplay (bool $display) : void
+    public function setDisplay (bool $display) : self
     {
         $this->display = $display;
+        return $this;
     }
     //endregion
 
@@ -301,10 +306,13 @@ class MenuItem
 
     /**
      * @param bool $current
+     *
+     * @return MenuItem
      */
-    public function setCurrent (bool $current) : void
+    public function setCurrent (bool $current) : self
     {
         $this->current = $current;
+        return $this;
     }
     //endregion
 
