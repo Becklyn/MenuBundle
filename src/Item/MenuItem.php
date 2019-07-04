@@ -10,7 +10,7 @@ class MenuItem
     //region Fields
     /**
      * The label to display.
-     * Will be translated
+     * Will be translated using the translation domain given in the renderer.
      *
      * @var string
      */
@@ -23,6 +23,14 @@ class MenuItem
      * @var MenuItem|null
      */
     private $parent;
+
+
+    /**
+     * The priority of this menu item. Menu items will be ordered by descending priority.
+     *
+     * @var int|null
+     */
+    private $priority = null;
 
 
     /**
@@ -101,6 +109,26 @@ class MenuItem
     {
         $this->label = $label;
 
+        if (isset($options["priority"]))
+        {
+            $this->setPriority($options["priority"]);
+        }
+
+        if (isset($options["listItemAttributes"]))
+        {
+            $this->setListItemAttributes($options["listItemAttributes"]);
+        }
+
+        if (isset($options["linkAttributes"]))
+        {
+            $this->setLinkAttributes($options["linkAttributes"]);
+        }
+
+        if (isset($options["childListAttributes"]))
+        {
+            $this->setChildListAttributes($options["childListAttributes"]);
+        }
+
         if (isset($options["target"]))
         {
             $this->setTarget($options["target"]);
@@ -112,6 +140,16 @@ class MenuItem
         elseif (isset($options["uri"]))
         {
             $this->setTarget($options["uri"]);
+        }
+
+        if (isset($options["display"]))
+        {
+            $this->setDisplay($options["display"]);
+        }
+
+        if (isset($options["current"]))
+        {
+            $this->setCurrent($options["current"]);
         }
     }
 
@@ -135,6 +173,26 @@ class MenuItem
     }
 
 
+    //region $this->priority
+    /**
+     * @return int|null
+     */
+    public function getPriority () : ?int
+    {
+        return $this->priority;
+    }
+
+
+    /**
+     * @param int|null $priority
+     */
+    public function setPriority (?int $priority) : void
+    {
+        $this->priority = $priority;
+    }
+    //endregion
+
+
     //region $this->listItemAttributes
     /**
      * @return array
@@ -142,6 +200,16 @@ class MenuItem
     public function getListItemAttributes () : array
     {
         return $this->listItemAttributes;
+    }
+
+
+    /**
+     * @param array $listItemAttributes
+     */
+    public function setListItemAttributes (array $listItemAttributes) : self
+    {
+        $this->listItemAttributes = $listItemAttributes;
+        return $this;
     }
 
 
@@ -170,6 +238,16 @@ class MenuItem
 
 
     /**
+     * @param array $linkAttributes
+     */
+    public function setLinkAttributes (array $linkAttributes) : self
+    {
+        $this->linkAttributes = $linkAttributes;
+        return $this;
+    }
+
+
+    /**
      * @param string $name
      * @param mixed  $value
      *
@@ -190,6 +268,16 @@ class MenuItem
     public function getChildListAttributes () : array
     {
         return $this->childListAttributes;
+    }
+
+
+    /**
+     * @param array $childListAttributes
+     */
+    public function setChildListAttributes (array $childListAttributes) : self
+    {
+        $this->childListAttributes = $childListAttributes;
+        return $this;
     }
 
 
