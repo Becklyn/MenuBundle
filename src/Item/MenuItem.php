@@ -4,6 +4,8 @@ namespace Becklyn\Menu\Item;
 
 use Becklyn\Menu\Exception\InvalidTargetException;
 use Becklyn\Menu\Target\RouteTarget;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MenuItem
 {
@@ -82,7 +84,7 @@ class MenuItem
      *
      * @var bool
      */
-    private $display = true;
+    private $visible = true;
 
 
     /**
@@ -142,9 +144,9 @@ class MenuItem
             $this->setTarget($options["uri"]);
         }
 
-        if (isset($options["display"]))
+        if (isset($options["visible"]))
         {
-            $this->setDisplay($options["display"]);
+            $this->setVisible($options["visible"]);
         }
 
         if (isset($options["current"]))
@@ -359,24 +361,24 @@ class MenuItem
     //endregion
 
 
-    //region $this->display
+    //region $this->visible
     /**
      * @return bool
      */
-    public function isDisplay () : bool
+    public function isVisible () : bool
     {
-        return $this->display;
+        return $this->visible;
     }
 
 
     /**
-     * @param bool $display
+     * @param bool $visible
      *
      * @return MenuItem
      */
-    public function setDisplay (bool $display) : self
+    public function setVisible (bool $visible) : self
     {
-        $this->display = $display;
+        $this->visible = $visible;
         return $this;
     }
     //endregion
@@ -410,7 +412,7 @@ class MenuItem
      * @param string $name
      * @param array  $options
      */
-    public function addChild (string $name, array $options) : MenuItem
+    public function addChild (string $name, array $options = []) : MenuItem
     {
         $child = new self($name, $options);
         $child->parent = $this;
@@ -437,7 +439,97 @@ class MenuItem
     public function getLevel () : int
     {
         return null !== $this->parent
-            ? $this->parent->getLevel()
+            ? $this->parent->getLevel() + 1
             : 0;
+    }
+
+
+    /**
+     * Resolves the ancestor state for this item and all sub items
+     *
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param array                 $options
+     *
+     * @return bool
+     */
+    public function resolveTree (UrlGeneratorInterface $urlGenerator, array $options) : bool
+    {
+        $isCurrentAncestor = false;
+
+        // resolve all children
+        foreach ($this->children as $child)
+        {
+            $subTreeCurrent = $child->resolveTree($urlGenerator, $options);
+
+            if ($subTreeCurrent)
+            {
+                $isCurrentAncestor = true;
+            }
+        }
+
+        $listItemClasses = [
+            $this->listItemAttributes["class"] ?? "",
+            "menu-item",
+        ];
+
+        if ($this->current)
+        {
+            $listItemClasses[] = $options["currentClass"];
+        }
+
+        if ($isCurrentAncestor)
+        {
+            $listItemClasses[] = $options["ancestorClass"];
+        }
+
+        if ($this->target instanceof RouteTarget)
+        {
+            $this->target = $urlGenerator->generate(
+                $this->target->getRoute(),
+                $this->target->getParameters(),
+                $this->target->getReferenceType()
+            );
+        }
+
+        $this->listItemAttributes["class"] = \trim(\implode(" ", $listItemClasses));
+
+        $childListAttributes = $this->childListAttributes["class"] ?? "";
+        $this->childListAttributes["class"] = \trim("{$childListAttributes} menu-level-{$this->getLevel()}");
+
+        return $this->current || $isCurrentAncestor;
+    }
+
+
+    /**
+     *
+     */
+    public function __clone ()
+    {
+        $oldChildren = $this->children;
+        $this->children = [];
+
+        foreach ($oldChildren as $child)
+        {
+            $this->children[] = clone $child;
+        }
+    }
+
+
+    /**
+     * @return MenuItem
+     */
+    public function getVisibleChildren () : array
+    {
+        $result = [];
+
+        foreach ($this->children as $child)
+        {
+            if ($child->isVisible())
+            {
+                $result[] = $child;
+            }
+        }
+
+        return $result;
     }
 }

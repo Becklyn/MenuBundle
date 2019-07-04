@@ -15,7 +15,8 @@
         "symfony/config": "^4.3",
         "symfony/dependency-injection": "^4.3",
         "symfony/http-kernel": "^4.3",
-        "symfony/routing": "^4.3"
+        "symfony/routing": "^4.3",
+        "twig/twig": "^2.11"
     },
     "require-dev": {
         "becklyn/php-cs": "^1.4"
