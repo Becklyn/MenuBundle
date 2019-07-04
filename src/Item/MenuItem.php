@@ -14,9 +14,17 @@ class MenuItem
      * The label to display.
      * Will be translated using the translation domain given in the renderer.
      *
-     * @var string
+     * @var string|null
      */
     private $label;
+
+
+    /**
+     * A key to find this item in the hierarchy
+     *
+     * @var mixed
+     */
+    private $key;
 
 
     /**
@@ -44,6 +52,12 @@ class MenuItem
 
 
     /**
+     * @var string[]
+     */
+    private $listItemClasses = [];
+
+
+    /**
      * The attributes of the link / the label.
      *
      * @var array
@@ -52,11 +66,23 @@ class MenuItem
 
 
     /**
+     * @var string[]
+     */
+    private $linkClasses = [];
+
+
+    /**
      * The attributes of the list of children.
      *
      * @var array
      */
     private $childListAttributes = [];
+
+
+    /**
+     * @var string[]
+     */
+    private $childListClasses = [];
 
 
     /**
@@ -105,9 +131,10 @@ class MenuItem
 
 
     /**
-     * @param string|int $key
+     * @param string|null $label
+     * @param array       $options
      */
-    public function __construct (string $label, array $options = [])
+    public function __construct (?string $label = null, array $options = [])
     {
         $this->label = $label;
 
@@ -153,14 +180,19 @@ class MenuItem
         {
             $this->setCurrent($options["current"]);
         }
+
+        if (isset($options["key"]))
+        {
+            $this->setKey($options["key"]);
+        }
     }
 
 
     //region Accessors
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLabel () : string
+    public function getLabel () : ?string
     {
         return $this->label;
     }
@@ -201,7 +233,14 @@ class MenuItem
      */
     public function getListItemAttributes () : array
     {
-        return $this->listItemAttributes;
+        $attributes = $this->listItemAttributes;
+
+        if (!empty($this->listItemClasses))
+        {
+            $attributes["class"] = \trim(($attributes["class"] ?? "") . " " . \implode(" ", $this->listItemClasses));
+        }
+
+        return $attributes;
     }
 
 
@@ -226,6 +265,20 @@ class MenuItem
         $this->listItemAttributes[$name] = $value;
         return $this;
     }
+
+
+    /**
+     * Convenience setter to set a child list class
+     *
+     * @param string $className
+     *
+     * @return MenuItem
+     */
+    public function addListItemClass (string $className) : self
+    {
+        $this->listItemClasses[] = $className;
+        return $this;
+    }
     //endregion
 
 
@@ -235,7 +288,14 @@ class MenuItem
      */
     public function getLinkAttributes () : array
     {
-        return $this->linkAttributes;
+        $attributes = $this->linkAttributes;
+
+        if (!empty($this->linkClasses))
+        {
+            $attributes["class"] = \trim(($attributes["class"] ?? "") . " " . \implode(" ", $this->linkClasses));
+        }
+
+        return $attributes;
     }
 
 
@@ -260,6 +320,20 @@ class MenuItem
         $this->linkAttributes[$name] = $value;
         return $this;
     }
+
+
+    /**
+     * Convenience setter to set a link class
+     *
+     * @param string $className
+     *
+     * @return MenuItem
+     */
+    public function addLinkClass (string $className) : self
+    {
+        $this->linkClasses[] = $className;
+        return $this;
+    }
     //endregion
 
 
@@ -269,7 +343,14 @@ class MenuItem
      */
     public function getChildListAttributes () : array
     {
-        return $this->childListAttributes;
+        $attributes = $this->childListAttributes;
+
+        if (!empty($this->childListClasses))
+        {
+            $attributes["class"] = \trim(($attributes["class"] ?? "") . " " . \implode(" ", $this->childListClasses));
+        }
+
+        return $attributes;
     }
 
 
@@ -292,6 +373,20 @@ class MenuItem
     public function setChildListAttribute (string $name, $value) : self
     {
         $this->childListAttributes[$name] = $value;
+        return $this;
+    }
+
+
+    /**
+     * Convenience setter to set a child list class
+     *
+     * @param string $className
+     *
+     * @return MenuItem
+     */
+    public function addChildListClass (string $className) : self
+    {
+        $this->childListClasses[] = $className;
         return $this;
     }
     //endregion
@@ -430,6 +525,29 @@ class MenuItem
         return $this->children;
     }
     //endregion
+
+
+    //region $this->key
+    /**
+     * @return mixed
+     */
+    public function getKey ()
+    {
+        return $this->key;
+    }
+
+
+    /**
+     * @param mixed $key
+     *
+     * @return MenuItem
+     */
+    public function setKey ($key) : self
+    {
+        $this->key = $key;
+        return $this;
+    }
+    //endregion
     //endregion
 
 
@@ -452,14 +570,14 @@ class MenuItem
      *
      * @return bool
      */
-    public function resolveTree (UrlGeneratorInterface $urlGenerator, array $options) : bool
+    public function resolveTree (UrlGeneratorInterface $urlGenerator, array $options, int $level = 0) : bool
     {
         $isCurrentAncestor = false;
 
         // resolve all children
         foreach ($this->children as $child)
         {
-            $subTreeCurrent = $child->resolveTree($urlGenerator, $options);
+            $subTreeCurrent = $child->resolveTree($urlGenerator, $options, $level + 1);
 
             if ($subTreeCurrent)
             {
@@ -467,19 +585,19 @@ class MenuItem
             }
         }
 
-        $listItemClasses = [
-            $this->listItemAttributes["class"] ?? "",
-            "menu-item",
-        ];
+        $this
+            ->addListItemClass("menu-item")
+            ->addChildListClass("menu-list")
+            ->addChildListClass("menu-level-{$level}");
 
         if ($this->current)
         {
-            $listItemClasses[] = $options["currentClass"];
+            $this->addListItemClass($options["currentClass"]);
         }
 
         if ($isCurrentAncestor)
         {
-            $listItemClasses[] = $options["ancestorClass"];
+            $this->addListItemClass($options["ancestorClass"]);
         }
 
         if ($this->target instanceof RouteTarget)
@@ -490,11 +608,6 @@ class MenuItem
                 $this->target->getReferenceType()
             );
         }
-
-        $this->listItemAttributes["class"] = \trim(\implode(" ", $listItemClasses));
-
-        $childListAttributes = $this->childListAttributes["class"] ?? "";
-        $this->childListAttributes["class"] = \trim("{$childListAttributes} menu-level-{$this->getLevel()}");
 
         return $this->current || $isCurrentAncestor;
     }
@@ -531,5 +644,33 @@ class MenuItem
         }
 
         return $result;
+    }
+
+
+    /**
+     * Finds a node inside the tree
+     *
+     * @param mixed $key
+     *
+     * @return MenuItem|null
+     */
+    public function find ($key) : ?MenuItem
+    {
+        if (null !== $this->key && $this->key === $key)
+        {
+            return $this;
+        }
+
+        foreach ($this->children as $child)
+        {
+            $result = $child->find($key);
+
+            if (null !== $result)
+            {
+                return $result;
+            }
+        }
+
+        return null;
     }
 }
