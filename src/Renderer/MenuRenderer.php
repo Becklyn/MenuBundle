@@ -48,17 +48,28 @@ class MenuRenderer implements ServiceSubscriberInterface
      *
      * @return string
      */
-    public function render (MenuItem $root, array $options = []) : string
+    public function render (?MenuItem $root, array $options = []) : string
     {
+        if (null === $root)
+        {
+            return "";
+        }
+
         // don't modify the original
         $root = clone $root;
 
         // apply external visitors
         // must be applied before voters, as they can generate new nodes
-        $this->applyVisitors($root);
+        if (!empty($this->visitors))
+        {
+            $this->applyVisitors($root);
+        }
 
         // run voters
-        $this->applyVoters($root);
+        if (!empty($this->voters))
+        {
+            $this->applyVoters($root);
+        }
 
         // resolve options
         $template = $options["template"] ?? "@BecklynMenu/menu.html.twig";
