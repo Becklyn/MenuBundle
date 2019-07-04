@@ -2,9 +2,11 @@
 
 namespace Becklyn\Menu\Target;
 
-
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
+/**
+ * A route target, that must later be resolved to point to an URL using a router.
+ */
 class RouteTarget
 {
     /**
