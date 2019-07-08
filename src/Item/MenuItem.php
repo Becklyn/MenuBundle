@@ -203,6 +203,7 @@ class MenuItem
     }
 
 
+    //region $this->parent
     /**
      * @return MenuItem|null
      */
@@ -210,6 +211,37 @@ class MenuItem
     {
         return $this->parent;
     }
+
+
+    /**
+     * @param MenuItem|null $parent
+     *
+     * @return MenuItem
+     */
+    public function setParent (?MenuItem $parent) : self
+    {
+        // remove item from parent's children
+        if (null !== $this->parent)
+        {
+            $index = \array_search($this, $this->parent->children);
+
+            if (false !== $index)
+            {
+                \array_splice($this->parent->children, $index, 1, null);
+            }
+        }
+
+        $this->parent = $parent;
+
+        if (null !== $parent)
+        {
+            $parent->children[] = $this;
+        }
+
+        return $this;
+    }
+    //endregion
+
 
 
     //region $this->priority
