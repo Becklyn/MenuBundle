@@ -46,11 +46,7 @@ class CoreVisitor implements ItemVisitor
         // replace target with URL
         if ($target instanceof LazyRoute)
         {
-            $item->setTarget($this->urlGenerator->generate(
-                $target->getRoute(),
-                $target->getParameters(),
-                $target->getReferenceType()
-            ));
+            $item->setTarget($target->generate($this->urlGenerator));
         }
 
         // check security
