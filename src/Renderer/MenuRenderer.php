@@ -4,7 +4,6 @@ namespace Becklyn\Menu\Renderer;
 
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Visitor\ItemVisitor;
-use Becklyn\Menu\Voter\VoterInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
@@ -16,28 +15,21 @@ class MenuRenderer implements ServiceSubscriberInterface
      */
     private $locator;
 
+
     /**
-     * @var ItemVisitor[]
+     * @var ItemVisitor[]|iterable
      */
     private $visitors;
 
 
     /**
-     * @var VoterInterface[]
-     */
-    private $voters;
-
-
-    /**
      * @param ContainerInterface $locator
      * @param ItemVisitor[]      $visitors
-     * @param VoterInterface[]   $voters
      */
-    public function __construct (ContainerInterface $locator, iterable $visitors, iterable $voters)
+    public function __construct (ContainerInterface $locator, iterable $visitors)
     {
         $this->locator = $locator;
         $this->visitors = $visitors;
-        $this->voters = $voters;
     }
 
 
@@ -62,12 +54,6 @@ class MenuRenderer implements ServiceSubscriberInterface
         if (!empty($this->visitors))
         {
             $this->applyVisitors($root);
-        }
-
-        // run voters
-        if (!empty($this->voters))
-        {
-            $this->applyVoters($root);
         }
 
         // resolve options
@@ -106,37 +92,6 @@ class MenuRenderer implements ServiceSubscriberInterface
         foreach ($item->getChildren() as $child)
         {
             $this->applyVisitors($child);
-        }
-    }
-
-
-    /**
-     * Applies the voters to the item and all children.
-     *
-     * @param MenuItem $item
-     */
-    private function applyVoters (MenuItem $item) : void
-    {
-        // only apply voters if the item isn't yet marked as "current" from the construction
-        if (!$item->isCurrent())
-        {
-            foreach ($this->voters as $voter)
-            {
-                $current = $voter->vote($item);
-
-                // the first matching voter wins
-                if (null !== $current)
-                {
-                    $item->setCurrent($current);
-                    break;
-                }
-            }
-        }
-
-
-        foreach ($item->getChildren() as $child)
-        {
-            $this->applyVoters($child);
         }
     }
 
