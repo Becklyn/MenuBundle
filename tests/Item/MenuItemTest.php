@@ -180,4 +180,47 @@ class MenuItemTest extends TestCase
         self::assertSame("none", $children[3]->getLabel());
         self::assertSame("-10", $children[4]->getLabel());
     }
+
+
+    /**
+     *
+     */
+    public function testFindSimple ()
+    {
+        $parent = new MenuItem();
+        $parent->addChild("test 1");
+        $toFind = $parent->addChild("test 2", ["key" => "ohai"]);
+        $parent->addChild("test 3");
+
+        self::assertSame($toFind, $parent->find("ohai"));
+        self::assertSame($toFind, $toFind->find("ohai"));
+    }
+
+
+    /**
+     * Tests depth first search for `find()`.
+     */
+    public function testFindAmbiguous ()
+    {
+        $parent = new MenuItem();
+        $child = $parent->addChild("test 1");
+        $toFind = $child->addChild("should find", ["key" => "ohai"]);
+        $parent->addChild("should not find", ["key" => "ohai"]);
+
+        self::assertSame($toFind, $parent->find("ohai"));
+    }
+
+
+    /**
+     * Tests depth first search for `find()`.
+     */
+    public function testFindNoMatch ()
+    {
+        $parent = new MenuItem();
+        $child = $parent->addChild("test 1");
+        $toFind = $child->addChild("test 2");
+        $parent->addChild("test 3", ["key" => "ohai"]);
+
+        self::assertNull($parent->find("missing"));
+    }
 }
