@@ -18,4 +18,4 @@ services:
         arguments:
             $voters: !tagged becklyn.menu.voter
         tags:
-            - { name: becklyn.menu.visitor, priority: -1001 }
+            - { name: becklyn.menu.visitor, priority: -1500 }
