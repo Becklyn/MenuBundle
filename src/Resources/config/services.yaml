@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Becklyn\Menu\:
+        resource: '../../*'
+        exclude: '../../{Exception,Node,Resources,BecklynMenuBundle.php}'
+
+
+    Becklyn\Menu\Renderer\MenuRenderer:
+        $visitors: !tagged becklyn.menu.visitor
+        $voters: !tagged becklyn.menu.voter
