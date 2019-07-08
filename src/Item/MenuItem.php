@@ -181,6 +181,11 @@ class MenuItem
             $this->setCurrent($options["current"]);
         }
 
+        if (isset($options["extras"]))
+        {
+            $this->setExtras($options["extras"]);
+        }
+
         if (isset($options["key"]))
         {
             $this->setKey($options["key"]);
@@ -431,12 +436,21 @@ class MenuItem
 
 
     /**
+     * @param array $extras
+     */
+    public function setExtras (array $extras) : void
+    {
+        $this->extras = $extras;
+    }
+
+
+    /**
      * @param string $name
      * @param        $value
      *
      * @return MenuItem
      */
-    public function setExtras (string $name, $value) : self
+    public function setExtra (string $name, $value) : self
     {
         $this->extras[$name] = $value;
         return $this;
