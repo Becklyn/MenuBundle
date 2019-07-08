@@ -60,7 +60,7 @@
 {%- macro attributes (attributes) -%}
     {%- for name, value in attributes -%}
         {%- if value is not none and value is not same as(false) -%}
-            {{- value is same as (true) ? value : (' %s="%s"'|format(name, value|e) | raw) -}}
+            {{- value is same as (true) ? value : (' %s="%s"'|format(name, value|e("html_attr")) | raw) -}}
         {%- endif -%}
     {%- endfor -%}
 {%- endmacro -%}
