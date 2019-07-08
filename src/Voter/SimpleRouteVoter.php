@@ -47,6 +47,8 @@ class SimpleRouteVoter implements VoterInterface
 
         $target = $item->getTarget();
 
-        return $target instanceof RouteTarget && $target->getRoute() === $route;
+        return $target instanceof RouteTarget
+            ? $target->getRoute() === $route
+            : null;
     }
 }
