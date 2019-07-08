@@ -594,6 +594,16 @@ class MenuItem
     {
         return $this->children;
     }
+
+
+    /**
+     * @return MenuItem
+     */
+    public function clearChildren () : self
+    {
+        $this->children = [];
+        return $this;
+    }
     //endregion
 
 
