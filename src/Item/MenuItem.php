@@ -532,7 +532,7 @@ class MenuItem
      */
     public function isVisible () : bool
     {
-        return $this->visible;
+        return $this->visible && null !== $this->label;
     }
 
 

@@ -206,10 +206,44 @@ class MenuItemTest extends TestCase
     public function testFindNoMatch ()
     {
         $parent = new MenuItem();
-        $child = $parent->addChild("test 1");
-        $toFind = $child->addChild("test 2");
+        $parent
+            ->addChild("test 1")
+            ->addChild("test 2");
         $parent->addChild("test 3", ["key" => "ohai"]);
 
         self::assertNull($parent->find("missing"));
     }
+
+
+    /**
+     * 
+     */
+    public function testVisibilityExplicitly ()
+    {
+        $item = new MenuItem("test", [
+            "visible" => false,
+        ]);
+
+        self::assertFalse($item->isVisible());
+        $item->setLabel(null);
+        self::assertFalse($item->isVisible());
+        $item->setLabel("not empty");
+        self::assertFalse($item->isVisible());
+    }
+
+
+    /**
+     *
+     */
+    public function testVisibilityImplicitly ()
+    {
+        $item = new MenuItem("test");
+
+        self::assertTrue($item->isVisible());
+        $item->setLabel(null);
+        self::assertFalse($item->isVisible());
+        $item->setLabel("not empty");
+        self::assertTrue($item->isVisible());
+    }
+
 }
