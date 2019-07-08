@@ -37,9 +37,9 @@ class MenuItem
     /**
      * The priority of this menu item. Menu items will be ordered by descending priority.
      *
-     * @var int|null
+     * @var int
      */
-    private $priority;
+    private $priority = 0;
 
 
     /**
@@ -270,18 +270,18 @@ class MenuItem
 
     //region $this->priority
     /**
-     * @return int|null
+     * @return int
      */
-    public function getPriority () : ?int
+    public function getPriority () : int
     {
         return $this->priority;
     }
 
 
     /**
-     * @param int|null $priority
+     * @param int $priority
      */
-    public function setPriority (?int $priority) : void
+    public function setPriority (int $priority) : void
     {
         $this->priority = $priority;
     }
