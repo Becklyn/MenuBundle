@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Core visitor, that checks the security and replaces the URLs
+ * Core visitor, that checks the security and replaces the URLs.
  */
 class CoreVisitor implements ItemVisitor
 {

@@ -4,7 +4,6 @@ namespace Becklyn\Menu\Item;
 
 use Becklyn\Menu\Exception\InvalidTargetException;
 use Becklyn\Menu\Target\LazyRoute;
-use Becklyn\Menu\Tree\ResolveHelper;
 
 class MenuItem
 {
@@ -19,7 +18,7 @@ class MenuItem
 
 
     /**
-     * A key to find this item in the hierarchy
+     * A key to find this item in the hierarchy.
      *
      * @var mixed
      */
@@ -127,7 +126,7 @@ class MenuItem
 
 
     /**
-     * The children of the menu item
+     * The children of the menu item.
      *
      * @var MenuItem[]
      */
@@ -231,7 +230,7 @@ class MenuItem
     /**
      * @return MenuItem|null
      */
-    public function getParent () : ?MenuItem
+    public function getParent () : ?self
     {
         return $this->parent;
     }
@@ -242,7 +241,7 @@ class MenuItem
      *
      * @return MenuItem
      */
-    public function setParent (?MenuItem $parent) : self
+    public function setParent (?self $parent) : self
     {
         // remove child from previous parent
         if (null !== $this->parent)
@@ -326,7 +325,7 @@ class MenuItem
 
 
     /**
-     * Convenience setter to set a child list class
+     * Convenience setter to set a child list class.
      *
      * @param string $className
      *
@@ -381,7 +380,7 @@ class MenuItem
 
 
     /**
-     * Convenience setter to set a link class
+     * Convenience setter to set a link class.
      *
      * @param string $className
      *
@@ -436,7 +435,7 @@ class MenuItem
 
 
     /**
-     * Convenience setter to set a child list class
+     * Convenience setter to set a child list class.
      *
      * @param string $className
      *
@@ -452,7 +451,7 @@ class MenuItem
 
     //region $this->target
     /**
-     * @param LazyRoute|string|null $target
+     * @param LazyRoute|string|mixed|null $target
      *
      * @return MenuItem
      */
@@ -499,7 +498,7 @@ class MenuItem
 
     /**
      * @param string $name
-     * @param        $value
+     * @param mixed  $value
      *
      * @return MenuItem
      */
@@ -574,7 +573,7 @@ class MenuItem
      * @param string $name
      * @param array  $options
      */
-    public function createChild (string $name, array $options = []) : MenuItem
+    public function createChild (string $name, array $options = []) : self
     {
         $child = new self($name, $options);
         $child->parent = $this;
@@ -608,7 +607,7 @@ class MenuItem
      *
      * @return MenuItem
      */
-    public function addChild (MenuItem $child) : self
+    public function addChild (self $child) : self
     {
         if (null !== $child->parent)
         {
@@ -626,9 +625,9 @@ class MenuItem
      *
      * @return MenuItem
      */
-    public function removeChild (MenuItem $child) : self
+    public function removeChild (self $child) : self
     {
-        $index = \array_search($child, $this->children);
+        $index = \array_search($child, $this->children, true);
 
         if (false !== $index)
         {
@@ -696,13 +695,15 @@ class MenuItem
 
 
     /**
-     * Resolves the ancestor state for this item and all sub items
+     * Resolves the ancestor state for this item and all sub items.
      *
-     * @internal should not be called externally
-     * @param ResolveHelper $resolveHelper
-     * @param array         $options
+     * @param string $currentClass
+     * @param string $ancestorClass
+     * @param int    $level
      *
      * @return bool
+     *
+     * @internal should not be called externally
      */
     public function resolveTree (string $currentClass = "current", string $ancestorClass = "ancestor", int $level = 0) : bool
     {
@@ -767,6 +768,7 @@ class MenuItem
         );
 
         $result = [];
+
         foreach ($entries as $entry)
         {
             $result[] = $items[$entry[0]];
@@ -792,7 +794,7 @@ class MenuItem
 
 
     /**
-     * @return MenuItem
+     * @return MenuItem[]
      */
     public function getVisibleChildren () : array
     {
@@ -811,13 +813,13 @@ class MenuItem
 
 
     /**
-     * Finds a node inside the tree
+     * Finds a node inside the tree.
      *
      * @param mixed $key
      *
      * @return MenuItem|null
      */
-    public function find ($key) : ?MenuItem
+    public function find ($key) : ?self
     {
         if (null !== $this->key && $this->key === $key)
         {
@@ -848,7 +850,7 @@ class MenuItem
         $hierarchy = [$this];
         $pointer = $this->parent;
 
-        while ($pointer !== null)
+        while (null !== $pointer)
         {
             $hierarchy[] = $pointer;
             $pointer = $pointer->parent;

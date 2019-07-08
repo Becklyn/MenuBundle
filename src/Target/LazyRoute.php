@@ -30,7 +30,6 @@ class LazyRoute
 
 
     /**
-     *
      * @param string $route
      * @param array  $parameters
      * @param int    $referenceType
