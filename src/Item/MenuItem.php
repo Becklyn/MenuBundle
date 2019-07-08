@@ -655,6 +655,7 @@ class MenuItem
     /**
      * Resolves the ancestor state for this item and all sub items
      *
+     * @internal should not be called externally
      * @param ResolveHelper $resolveHelper
      * @param array         $options
      *
