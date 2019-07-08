@@ -3,7 +3,7 @@
 namespace Becklyn\Menu\Voter;
 
 use Becklyn\Menu\Item\MenuItem;
-use Becklyn\Menu\Target\RouteTarget;
+use Becklyn\Menu\Target\LazyRoute;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -47,7 +47,7 @@ class SimpleRouteVoter implements VoterInterface
 
         $target = $item->getTarget();
 
-        return $target instanceof RouteTarget
+        return $target instanceof LazyRoute
             ? $target->getRoute() === $route
             : null;
     }

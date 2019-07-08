@@ -3,7 +3,7 @@
 namespace Becklyn\Menu\Item;
 
 use Becklyn\Menu\Exception\InvalidTargetException;
-use Becklyn\Menu\Target\RouteTarget;
+use Becklyn\Menu\Target\LazyRoute;
 use Becklyn\Menu\Tree\ResolveHelper;
 
 class MenuItem
@@ -91,7 +91,7 @@ class MenuItem
      * string       -> direct URI
      * null         -> no link
      *
-     * @var RouteTarget|string|null
+     * @var LazyRoute|string|null
      */
     private $target;
 
@@ -169,7 +169,7 @@ class MenuItem
         }
         elseif (isset($options["route"]))
         {
-            $this->setTarget(new RouteTarget($options["route"], $options["routeParameters"] ?? []));
+            $this->setTarget(new LazyRoute($options["route"], $options["routeParameters"] ?? []));
         }
         elseif (isset($options["uri"]))
         {
@@ -452,13 +452,13 @@ class MenuItem
 
     //region $this->target
     /**
-     * @param RouteTarget|string|null $target
+     * @param LazyRoute|string|null $target
      *
      * @return MenuItem
      */
     public function setTarget ($target) : self
     {
-        if ($target instanceof RouteTarget || \is_string($target) || null === $target)
+        if ($target instanceof LazyRoute || \is_string($target) || null === $target)
         {
             $this->target = $target;
             return $this;
@@ -469,7 +469,7 @@ class MenuItem
 
 
     /**
-     * @return RouteTarget|string|null
+     * @return LazyRoute|string|null
      */
     public function getTarget ()
     {

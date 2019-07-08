@@ -3,7 +3,7 @@
 namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
-use Becklyn\Menu\Target\RouteTarget;
+use Becklyn\Menu\Target\LazyRoute;
 use PHPUnit\Framework\TestCase;
 
 class MenuItemTest extends TestCase
@@ -95,12 +95,12 @@ class MenuItemTest extends TestCase
 
 
         $routeWithout = new MenuItem(null, ["route" => "route"]);
-        self::assertInstanceOf(RouteTarget::class, $routeWithout->getTarget());
+        self::assertInstanceOf(LazyRoute::class, $routeWithout->getTarget());
         self::assertSame("route", $routeWithout->getTarget()->getRoute());
         self::assertSame([], $routeWithout->getTarget()->getParameters());
 
         $routeWith = new MenuItem(null, ["route" => "route2", "routeParameters" => ["test" => 123]]);
-        self::assertInstanceOf(RouteTarget::class, $routeWith->getTarget());
+        self::assertInstanceOf(LazyRoute::class, $routeWith->getTarget());
         self::assertSame("route2", $routeWith->getTarget()->getRoute());
         self::assertSame(["test" => 123], $routeWith->getTarget()->getParameters());
     }

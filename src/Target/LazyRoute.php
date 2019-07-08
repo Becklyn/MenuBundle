@@ -3,11 +3,13 @@
 namespace Becklyn\Menu\Target;
 
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * A route target, that must later be resolved to point to an URL using a router.
+ * All config required for generating a route. This is a VO to delay the actual generation of the route to a later
+ * point in time.
  */
-class RouteTarget
+class LazyRoute
 {
     /**
      * @var string
@@ -65,5 +67,16 @@ class RouteTarget
     public function getReferenceType () : int
     {
         return $this->referenceType;
+    }
+
+
+    /**
+     * @param UrlGeneratorInterface $urlGenerator
+     *
+     * @return string
+     */
+    public function generate (UrlGeneratorInterface $urlGenerator) : string
+    {
+        return $urlGenerator->generate($this->route, $this->parameters, $this->referenceType);
     }
 }

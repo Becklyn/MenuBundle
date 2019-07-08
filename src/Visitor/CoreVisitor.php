@@ -3,7 +3,7 @@
 namespace Becklyn\Menu\Visitor;
 
 use Becklyn\Menu\Item\MenuItem;
-use Becklyn\Menu\Target\RouteTarget;
+use Becklyn\Menu\Target\LazyRoute;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -44,7 +44,7 @@ class CoreVisitor implements ItemVisitor
         $target = $item->getTarget();
 
         // replace target with URL
-        if ($target instanceof RouteTarget)
+        if ($target instanceof LazyRoute)
         {
             $item->setTarget($this->urlGenerator->generate(
                 $target->getRoute(),
