@@ -262,4 +262,26 @@ class MenuItemTest extends TestCase
         self::assertSame([$root, $parent, $child, $grandchild], $grandchild->getHierarchy());
     }
 
+
+    /**
+     *
+     */
+    public function testStablePrioritySort () : void
+    {
+        $root = new MenuItem();
+        $expectedLabels = [];
+        for ($i = 0; $i < 20; $i++)
+        {
+            $label = (string) $i;
+
+            $expectedLabels[] = $label;
+            $root->addChild($label, ["priority" => 0]);
+        }
+
+        $root->resolveTree();
+
+        $actualLabels = \array_map(function (MenuItem $item) { return $item->getLabel(); }, $root->getChildren());
+        self::assertSame($expectedLabels, $actualLabels);
+    }
+
 }

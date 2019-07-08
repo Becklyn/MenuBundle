@@ -702,15 +702,44 @@ class MenuItem
         }
 
         // sort by priority
+        $this->children = $this->sort($this->children);
+
+        return $this->current || $isCurrentAncestor;
+    }
+
+
+    /**
+     * Sorts the children by desc priority (stable).
+     *
+     * @param MenuItem[] $items
+     *
+     * @return MenuItem[]
+     */
+    private function sort (array $items) : array
+    {
+        $entries = [];
+
+        foreach ($items as $index => $item)
+        {
+            $entries[] = [$index, $item->priority];
+        }
+
         \usort(
-            $this->children,
-            function (MenuItem $left, MenuItem $right) : int
+            $entries,
+            function (array $left, array $right)
             {
-                return $right->priority - $left->priority;
+                // sort desc by priorities. If they are falsy (= 0), then sort asc by key
+                return ($right[1] - $left[1]) ?: $left[0] - $right[0];
             }
         );
 
-        return $this->current || $isCurrentAncestor;
+        $result = [];
+        foreach ($entries as $entry)
+        {
+            $result[] = $items[$entry[0]];
+        }
+
+        return $result;
     }
 
 
