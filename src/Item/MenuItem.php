@@ -4,8 +4,7 @@ namespace Becklyn\Menu\Item;
 
 use Becklyn\Menu\Exception\InvalidTargetException;
 use Becklyn\Menu\Target\RouteTarget;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Becklyn\Menu\Tree\ResolveHelper;
 
 class MenuItem
 {
@@ -656,19 +655,19 @@ class MenuItem
     /**
      * Resolves the ancestor state for this item and all sub items
      *
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param array                 $options
+     * @param ResolveHelper $resolveHelper
+     * @param array         $options
      *
      * @return bool
      */
-    public function resolveTree (UrlGeneratorInterface $urlGenerator, array $options, int $level = 0) : bool
+    public function resolveTree (ResolveHelper $resolveHelper, array $options, int $level = 0) : bool
     {
         $isCurrentAncestor = false;
 
         // resolve all children
         foreach ($this->children as $child)
         {
-            $subTreeCurrent = $child->resolveTree($urlGenerator, $options, $level + 1);
+            $subTreeCurrent = $child->resolveTree($resolveHelper, $options, $level + 1);
 
             if ($subTreeCurrent)
             {
@@ -693,12 +692,21 @@ class MenuItem
 
         if ($this->target instanceof RouteTarget)
         {
-            $this->target = $urlGenerator->generate(
+            $this->target = $resolveHelper->generateUrl(
                 $this->target->getRoute(),
                 $this->target->getParameters(),
                 $this->target->getReferenceType()
             );
         }
+
+        // sort by priority
+        \usort(
+            $this->children,
+            function (MenuItem $left, MenuItem $right) : int
+            {
+                return $right->priority - $left->priority;
+            }
+        );
 
         return $this->current || $isCurrentAncestor;
     }

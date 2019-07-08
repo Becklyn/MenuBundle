@@ -4,6 +4,7 @@ namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Target\RouteTarget;
+use Becklyn\Menu\Tree\ResolveHelper;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -97,7 +98,7 @@ class MenuItemTest extends TestCase
         $child = $parent->addChild("child", ["current" => true]);
         $grandchild = $child->addChild("grandchild");
 
-        $urlGenerator = $this->getMockBuilder(UrlGeneratorInterface::class)
+        $urlGenerator = $this->getMockBuilder(ResolveHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -151,6 +152,32 @@ class MenuItemTest extends TestCase
         self::assertInstanceOf(RouteTarget::class, $routeWith->getTarget());
         self::assertSame("route2", $routeWith->getTarget()->getRoute());
         self::assertSame(["test" => 123], $routeWith->getTarget()->getParameters());
+    }
 
+
+    /**
+     *
+     */
+    public function testPriority () : void
+    {
+        $parent = new MenuItem();
+        $parent->addChild("10", ["priority" => 10]);
+        $parent->addChild("100", ["priority" => 100]);
+        $parent->addChild("-10", ["priority" => -10]);
+        $parent->addChild("50", ["priority" => 50]);
+        $parent->addChild("none");
+
+        $urlGenerator = $this->getMockBuilder(ResolveHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $parent->resolveTree($urlGenerator, []);
+
+        $children = $parent->getChildren();
+        self::assertSame("100", $children[0]->getLabel());
+        self::assertSame("50", $children[1]->getLabel());
+        self::assertSame("10", $children[2]->getLabel());
+        self::assertSame("none", $children[3]->getLabel());
+        self::assertSame("-10", $children[4]->getLabel());
     }
 }

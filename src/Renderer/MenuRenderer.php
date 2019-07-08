@@ -3,6 +3,7 @@
 namespace Becklyn\Menu\Renderer;
 
 use Becklyn\Menu\Item\MenuItem;
+use Becklyn\Menu\Tree\ResolveHelper;
 use Becklyn\Menu\Visitor\ItemVisitor;
 use Becklyn\Menu\Voter\VoterInterface;
 use Psr\Container\ContainerInterface;
@@ -83,10 +84,8 @@ class MenuRenderer implements ServiceSubscriberInterface
         ], $options);
 
         // resolve the ancestors
-        $root->resolveTree(
-            $this->locator->get(RouterInterface::class),
-            $options
-        );
+        $resolveHelper = new ResolveHelper($this->locator->get(RouterInterface::class));
+        $root->resolveTree($resolveHelper, $options);
 
         return $this->locator->get(Environment::class)->render($template, [
             "options" => $options,
