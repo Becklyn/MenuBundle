@@ -3,7 +3,9 @@
 namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
+use Becklyn\Menu\Target\RouteTarget;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MenuItemTest extends TestCase
 {
@@ -27,7 +29,7 @@ class MenuItemTest extends TestCase
 
 
     /**
-     * 
+     *
      */
     public function testSetOtherParent () : void
     {
@@ -46,5 +48,107 @@ class MenuItemTest extends TestCase
         self::assertCount(1, $parent2->getChildren());
         self::assertSame($child, $parent2->getChildren()[0]);
         self::assertSame($parent2, $child->getParent());
+    }
+
+
+    /**
+     *
+     */
+    public function testConstructorOptions () : void
+    {
+        $listItemAttributes = ["list" => "listItemAttributes"];
+        $linkAttributes = ["list" => "linkAttributes"];
+        $childListAttributes = ["list" => "childListAttributes"];
+        $extras = ["list" => "extras"];
+
+        $item = new MenuItem("item", [
+            "priority" => 5,
+            "listItemAttributes" => $listItemAttributes,
+            "linkAttributes" => $linkAttributes,
+            "childListAttributes" => $childListAttributes,
+            "target" => "abc",
+            "visible" => false,
+            "current" => true,
+            "extras" => $extras,
+            "key" => "key",
+        ]);
+
+        self::assertSame("item", $item->getLabel());
+        self::assertSame(5, $item->getPriority());
+        self::assertSame($listItemAttributes, $item->getListItemAttributes());
+        self::assertSame($linkAttributes, $item->getLinkAttributes());
+        self::assertSame($childListAttributes, $item->getChildListAttributes());
+        self::assertSame("abc", $item->getTarget());
+        self::assertSame(false, $item->isVisible());
+        self::assertSame(true, $item->isCurrent());
+        self::assertSame($extras, $item->getExtras());
+        self::assertSame("key", $item->getKey());
+    }
+
+
+    /**
+     *
+     */
+    public function testAncestors () : void
+    {
+        $parent = new MenuItem("parent", ["current" => true]);
+        $child = $parent->addChild("child", ["current" => true]);
+        $grandchild = $child->addChild("grandchild");
+
+        $urlGenerator = $this->getMockBuilder(UrlGeneratorInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $parent->resolveTree($urlGenerator, [
+            "currentClass" => "current",
+            "ancestorClass" => "ancestor",
+        ]);
+
+        self::assertContains("ancestor", $parent->getListItemAttributes()["class"]);
+        self::assertContains("current", $parent->getListItemAttributes()["class"]);
+
+        self::assertNotContains("ancestor", $child->getListItemAttributes()["class"]);
+        self::assertContains("current", $child->getListItemAttributes()["class"]);
+
+        self::assertNotContains("ancestor", $grandchild->getListItemAttributes()["class"]);
+        self::assertNotContains("current", $grandchild->getListItemAttributes()["class"]);
+    }
+
+
+    /**
+     *
+     */
+    public function testLevel () : void
+    {
+        $parent = new MenuItem("parent");
+        $child = $parent->addChild("child");
+        $grandchild = $child->addChild("grandchild");
+
+        self::assertSame(0, $parent->getLevel());
+        self::assertSame(1, $child->getLevel());
+        self::assertSame(2, $grandchild->getLevel());
+    }
+
+
+    /**
+     * @param array $config
+     * @param       $expected
+     */
+    public function testTarget () : void
+    {
+        $url = new MenuItem(null, ["target" => "abc"]);
+        self::assertSame("abc", $url->getTarget());
+
+
+        $routeWithout = new MenuItem(null, ["route" => "route"]);
+        self::assertInstanceOf(RouteTarget::class, $routeWithout->getTarget());
+        self::assertSame("route", $routeWithout->getTarget()->getRoute());
+        self::assertSame([], $routeWithout->getTarget()->getParameters());
+
+        $routeWith = new MenuItem(null, ["route" => "route2", "routeParameters" => ["test" => 123]]);
+        self::assertInstanceOf(RouteTarget::class, $routeWith->getTarget());
+        self::assertSame("route2", $routeWith->getTarget()->getRoute());
+        self::assertSame(["test" => 123], $routeWith->getTarget()->getParameters());
+
     }
 }
