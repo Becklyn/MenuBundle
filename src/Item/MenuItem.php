@@ -764,4 +764,24 @@ class MenuItem
 
         return null;
     }
+
+
+    /**
+     * Returns the hierarchy, whereas the first item is the root and the last item is the current one.
+     *
+     * @return MenuItem[]
+     */
+    public function getHierarchy () : array
+    {
+        $hierarchy = [$this];
+        $pointer = $this->parent;
+
+        while ($pointer !== null)
+        {
+            $hierarchy[] = $pointer;
+            $pointer = $pointer->parent;
+        }
+
+        return \array_reverse($hierarchy);
+    }
 }

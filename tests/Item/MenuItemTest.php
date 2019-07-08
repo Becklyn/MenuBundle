@@ -174,7 +174,7 @@ class MenuItemTest extends TestCase
     /**
      *
      */
-    public function testFindSimple ()
+    public function testFindSimple () : void
     {
         $parent = new MenuItem();
         $parent->addChild("test 1");
@@ -189,7 +189,7 @@ class MenuItemTest extends TestCase
     /**
      * Tests depth first search for `find()`.
      */
-    public function testFindAmbiguous ()
+    public function testFindAmbiguous () : void
     {
         $parent = new MenuItem();
         $child = $parent->addChild("test 1");
@@ -203,7 +203,7 @@ class MenuItemTest extends TestCase
     /**
      * Tests depth first search for `find()`.
      */
-    public function testFindNoMatch ()
+    public function testFindNoMatch () : void
     {
         $parent = new MenuItem();
         $parent
@@ -216,9 +216,9 @@ class MenuItemTest extends TestCase
 
 
     /**
-     * 
+     *
      */
-    public function testVisibilityExplicitly ()
+    public function testVisibilityExplicitly () : void
     {
         $item = new MenuItem("test", [
             "visible" => false,
@@ -235,7 +235,7 @@ class MenuItemTest extends TestCase
     /**
      *
      */
-    public function testVisibilityImplicitly ()
+    public function testVisibilityImplicitly () : void
     {
         $item = new MenuItem("test");
 
@@ -244,6 +244,22 @@ class MenuItemTest extends TestCase
         self::assertFalse($item->isVisible());
         $item->setLabel("not empty");
         self::assertTrue($item->isVisible());
+    }
+
+
+    /**
+     *
+     */
+    public function testHierarchy () : void
+    {
+        $root = new MenuItem();
+        $parent = $root->addChild("parent");
+        $child = $parent->addChild("child");
+        $grandchild = $child->addChild("grandchild");
+        $root->addChild("other_parent1");
+        $root->addChild("other_parent2");
+
+        self::assertSame([$root, $parent, $child, $grandchild], $grandchild->getHierarchy());
     }
 
 }
