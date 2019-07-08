@@ -660,14 +660,14 @@ class MenuItem
      *
      * @return bool
      */
-    public function resolveTree (ResolveHelper $resolveHelper, array $options, int $level = 0) : bool
+    public function resolveTree (string $currentClass = "current", string $ancestorClass = "ancestor", int $level = 0) : bool
     {
         $isCurrentAncestor = false;
 
         // resolve all children
         foreach ($this->children as $child)
         {
-            $subTreeCurrent = $child->resolveTree($resolveHelper, $options, $level + 1);
+            $subTreeCurrent = $child->resolveTree($currentClass, $ancestorClass, $level + 1);
 
             if ($subTreeCurrent)
             {
@@ -682,21 +682,12 @@ class MenuItem
 
         if ($this->current)
         {
-            $this->addListItemClass($options["currentClass"]);
+            $this->addListItemClass($currentClass);
         }
 
         if ($isCurrentAncestor)
         {
-            $this->addListItemClass($options["ancestorClass"]);
-        }
-
-        if ($this->target instanceof RouteTarget)
-        {
-            $this->target = $resolveHelper->generateUrl(
-                $this->target->getRoute(),
-                $this->target->getParameters(),
-                $this->target->getReferenceType()
-            );
+            $this->addListItemClass($ancestorClass);
         }
 
         // sort by priority

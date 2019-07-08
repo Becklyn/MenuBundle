@@ -98,14 +98,7 @@ class MenuItemTest extends TestCase
         $child = $parent->addChild("child", ["current" => true]);
         $grandchild = $child->addChild("grandchild");
 
-        $urlGenerator = $this->getMockBuilder(ResolveHelper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $parent->resolveTree($urlGenerator, [
-            "currentClass" => "current",
-            "ancestorClass" => "ancestor",
-        ]);
+        $parent->resolveTree();
 
         self::assertContains("ancestor", $parent->getListItemAttributes()["class"]);
         self::assertContains("current", $parent->getListItemAttributes()["class"]);
@@ -167,11 +160,7 @@ class MenuItemTest extends TestCase
         $parent->addChild("50", ["priority" => 50]);
         $parent->addChild("none");
 
-        $urlGenerator = $this->getMockBuilder(ResolveHelper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $parent->resolveTree($urlGenerator, []);
+        $parent->resolveTree();
 
         $children = $parent->getChildren();
         self::assertSame("100", $children[0]->getLabel());
