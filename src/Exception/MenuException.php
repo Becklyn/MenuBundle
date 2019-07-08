@@ -2,7 +2,6 @@
 
 namespace Becklyn\Menu\Exception;
 
-
 class MenuException extends \Exception
 {
     /**

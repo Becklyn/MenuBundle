@@ -96,7 +96,7 @@ class MenuRenderer implements ServiceSubscriberInterface
      *
      * @param MenuItem $item
      */
-    private function applyVisitors (MenuItem $item)
+    private function applyVisitors (MenuItem $item) : void
     {
         foreach ($this->visitors as $visitor)
         {
@@ -115,7 +115,7 @@ class MenuRenderer implements ServiceSubscriberInterface
      *
      * @param MenuItem $item
      */
-    private function applyVoters (MenuItem $item)
+    private function applyVoters (MenuItem $item) : void
     {
         // only apply voters if the item isn't yet marked as "current" from the construction
         if (!$item->isCurrent())

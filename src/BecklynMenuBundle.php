@@ -45,7 +45,7 @@ class BecklynMenuBundle extends Bundle
     /**
      * @inheritDoc
      */
-    public function build (ContainerBuilder $container)
+    public function build (ContainerBuilder $container) : void
     {
         $container->registerForAutoconfiguration(ItemVisitor::class)
             ->addTag("becklyn.menu.visitor");
