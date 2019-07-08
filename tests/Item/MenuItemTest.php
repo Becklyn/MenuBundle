@@ -71,6 +71,7 @@ class MenuItemTest extends TestCase
             "current" => true,
             "extras" => $extras,
             "key" => "key",
+            "security" => "security",
         ]);
 
         self::assertSame("item", $item->getLabel());
@@ -83,6 +84,7 @@ class MenuItemTest extends TestCase
         self::assertSame(true, $item->isCurrent());
         self::assertSame($extras, $item->getExtras());
         self::assertSame("key", $item->getKey());
+        self::assertSame("security", $item->getSecurity());
     }
 
 

@@ -98,6 +98,12 @@ class MenuItem
 
 
     /**
+     * @var string|null
+     */
+    private $security;
+
+
+    /**
      * The extra attributes on the menu item.
      *
      * @var array
@@ -189,6 +195,11 @@ class MenuItem
         if (isset($options["key"]))
         {
             $this->setKey($options["key"]);
+        }
+
+        if (isset($options["security"]))
+        {
+            $this->setSecurity($options["security"]);
         }
     }
 
@@ -592,6 +603,26 @@ class MenuItem
     {
         $this->key = $key;
         return $this;
+    }
+    //endregion
+
+
+    //region $this->security
+    /**
+     * @return string|null
+     */
+    public function getSecurity () : ?string
+    {
+        return $this->security;
+    }
+
+
+    /**
+     * @param string|null $security
+     */
+    public function setSecurity (?string $security) : void
+    {
+        $this->security = $security;
     }
     //endregion
     //endregion
