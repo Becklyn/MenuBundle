@@ -40,7 +40,7 @@ class MenuItem
      *
      * @var int|null
      */
-    private $priority = null;
+    private $priority;
 
 
     /**
