@@ -7,7 +7,15 @@ services:
         resource: '../../*'
         exclude: '../../{Exception,Node,Resources,BecklynMenuBundle.php}'
 
-
     Becklyn\Menu\Renderer\MenuRenderer:
         $visitors: !tagged becklyn.menu.visitor
-        $voters: !tagged becklyn.menu.voter
+
+    Becklyn\Menu\Visitor\CoreVisitor:
+        tags:
+            - { name: becklyn.menu.visitor, priority: -1000 }
+
+    Becklyn\Menu\Visitor\VoterVisitor:
+        arguments:
+            $voters: !tagged becklyn.menu.voter
+        tags:
+            - { name: becklyn.menu.visitor, priority: -1001 }
