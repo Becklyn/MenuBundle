@@ -205,6 +205,7 @@ class MenuItem
 
 
     //region Accessors
+    //region $this->label
     /**
      * @return string|null
      */
@@ -212,6 +213,19 @@ class MenuItem
     {
         return $this->label;
     }
+
+
+    /**
+     * @param string|null $label
+     *
+     * @return MenuItem
+     */
+    public function setLabel (?string $label) : self
+    {
+        $this->label = $label;
+        return $this;
+    }
+    //endregion
 
 
     //region $this->parent
