@@ -4,52 +4,10 @@ namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Target\RouteTarget;
-use Becklyn\Menu\Tree\ResolveHelper;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MenuItemTest extends TestCase
 {
-    /**
-     *
-     */
-    public function testSetNullParent () : void
-    {
-        $parent = new MenuItem("parent");
-        $child = $parent->addChild("child");
-
-        self::assertCount(1, $parent->getChildren());
-        self::assertSame($child, $parent->getChildren()[0]);
-        self::assertSame($parent, $child->getParent());
-
-        $child->setParent(null);
-
-        self::assertCount(0, $parent->getChildren());
-        self::assertNull($child->getParent());
-    }
-
-
-    /**
-     *
-     */
-    public function testSetOtherParent () : void
-    {
-        $parent1 = new MenuItem("parent 1");
-        $parent2 = new MenuItem("parent 2");
-        $child = $parent1->addChild("child");
-
-        self::assertCount(1, $parent1->getChildren());
-        self::assertCount(0, $parent2->getChildren());
-        self::assertSame($child, $parent1->getChildren()[0]);
-        self::assertSame($parent1, $child->getParent());
-
-        $child->setParent($parent2);
-
-        self::assertCount(0, $parent1->getChildren());
-        self::assertCount(1, $parent2->getChildren());
-        self::assertSame($child, $parent2->getChildren()[0]);
-        self::assertSame($parent2, $child->getParent());
-    }
 
 
     /**
@@ -95,8 +53,8 @@ class MenuItemTest extends TestCase
     public function testAncestors () : void
     {
         $parent = new MenuItem("parent", ["current" => true]);
-        $child = $parent->addChild("child", ["current" => true]);
-        $grandchild = $child->addChild("grandchild");
+        $child = $parent->createChild("child", ["current" => true]);
+        $grandchild = $child->createChild("grandchild");
 
         $parent->resolveTree();
 
@@ -117,8 +75,8 @@ class MenuItemTest extends TestCase
     public function testLevel () : void
     {
         $parent = new MenuItem("parent");
-        $child = $parent->addChild("child");
-        $grandchild = $child->addChild("grandchild");
+        $child = $parent->createChild("child");
+        $grandchild = $child->createChild("grandchild");
 
         self::assertSame(0, $parent->getLevel());
         self::assertSame(1, $child->getLevel());
@@ -154,11 +112,11 @@ class MenuItemTest extends TestCase
     public function testPriority () : void
     {
         $parent = new MenuItem();
-        $parent->addChild("10", ["priority" => 10]);
-        $parent->addChild("100", ["priority" => 100]);
-        $parent->addChild("-10", ["priority" => -10]);
-        $parent->addChild("50", ["priority" => 50]);
-        $parent->addChild("none");
+        $parent->createChild("10", ["priority" => 10]);
+        $parent->createChild("100", ["priority" => 100]);
+        $parent->createChild("-10", ["priority" => -10]);
+        $parent->createChild("50", ["priority" => 50]);
+        $parent->createChild("none");
 
         $parent->resolveTree();
 
@@ -177,9 +135,9 @@ class MenuItemTest extends TestCase
     public function testFindSimple () : void
     {
         $parent = new MenuItem();
-        $parent->addChild("test 1");
-        $toFind = $parent->addChild("test 2", ["key" => "ohai"]);
-        $parent->addChild("test 3");
+        $parent->createChild("test 1");
+        $toFind = $parent->createChild("test 2", ["key" => "ohai"]);
+        $parent->createChild("test 3");
 
         self::assertSame($toFind, $parent->find("ohai"));
         self::assertSame($toFind, $toFind->find("ohai"));
@@ -192,9 +150,9 @@ class MenuItemTest extends TestCase
     public function testFindAmbiguous () : void
     {
         $parent = new MenuItem();
-        $child = $parent->addChild("test 1");
-        $toFind = $child->addChild("should find", ["key" => "ohai"]);
-        $parent->addChild("should not find", ["key" => "ohai"]);
+        $child = $parent->createChild("test 1");
+        $toFind = $child->createChild("should find", ["key" => "ohai"]);
+        $parent->createChild("should not find", ["key" => "ohai"]);
 
         self::assertSame($toFind, $parent->find("ohai"));
     }
@@ -207,9 +165,9 @@ class MenuItemTest extends TestCase
     {
         $parent = new MenuItem();
         $parent
-            ->addChild("test 1")
-            ->addChild("test 2");
-        $parent->addChild("test 3", ["key" => "ohai"]);
+            ->createChild("test 1")
+            ->createChild("test 2");
+        $parent->createChild("test 3", ["key" => "ohai"]);
 
         self::assertNull($parent->find("missing"));
     }
@@ -250,22 +208,6 @@ class MenuItemTest extends TestCase
     /**
      *
      */
-    public function testHierarchy () : void
-    {
-        $root = new MenuItem();
-        $parent = $root->addChild("parent");
-        $child = $parent->addChild("child");
-        $grandchild = $child->addChild("grandchild");
-        $root->addChild("other_parent1");
-        $root->addChild("other_parent2");
-
-        self::assertSame([$root, $parent, $child, $grandchild], $grandchild->getHierarchy());
-    }
-
-
-    /**
-     *
-     */
     public function testStablePrioritySort () : void
     {
         $root = new MenuItem();
@@ -275,7 +217,7 @@ class MenuItemTest extends TestCase
             $label = (string) $i;
 
             $expectedLabels[] = $label;
-            $root->addChild($label, ["priority" => 0]);
+            $root->createChild($label, ["priority" => 0]);
         }
 
         $root->resolveTree();

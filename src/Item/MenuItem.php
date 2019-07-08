@@ -244,22 +244,19 @@ class MenuItem
      */
     public function setParent (?MenuItem $parent) : self
     {
-        // remove item from parent's children
+        // remove child from previous parent
         if (null !== $this->parent)
         {
-            $index = \array_search($this, $this->parent->children);
-
-            if (false !== $index)
-            {
-                \array_splice($this->parent->children, $index, 1, null);
-            }
+            $this->parent->removeChild($this);
         }
 
+        // update parent
         $this->parent = $parent;
 
+        // add to parent children, if parent is not null
         if (null !== $parent)
         {
-            $parent->children[] = $this;
+            $parent->addChild($this);
         }
 
         return $this;
@@ -577,7 +574,7 @@ class MenuItem
      * @param string $name
      * @param array  $options
      */
-    public function addChild (string $name, array $options = []) : MenuItem
+    public function createChild (string $name, array $options = []) : MenuItem
     {
         $child = new self($name, $options);
         $child->parent = $this;
@@ -602,6 +599,42 @@ class MenuItem
     public function clearChildren () : self
     {
         $this->children = [];
+        return $this;
+    }
+
+
+    /**
+     * @param MenuItem $child
+     *
+     * @return MenuItem
+     */
+    public function addChild (MenuItem $child) : self
+    {
+        if (null !== $child->parent)
+        {
+            $child->parent->removeChild($child);
+        }
+
+        $child->parent = $this;
+        $this->children[] = $child;
+        return $this;
+    }
+
+
+    /**
+     * @param MenuItem $child
+     *
+     * @return MenuItem
+     */
+    public function removeChild (MenuItem $child) : self
+    {
+        $index = \array_search($child, $this->children);
+
+        if (false !== $index)
+        {
+            \array_splice($this->children, $index, 1, null);
+        }
+
         return $this;
     }
     //endregion
