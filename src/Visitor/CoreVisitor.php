@@ -53,7 +53,7 @@ class CoreVisitor implements ItemVisitor
     /**
      * @inheritDoc
      */
-    public function visit (MenuItem $item) : void
+    public function visit (MenuItem $item, array $options) : void
     {
         $target = $item->getTarget();
 
@@ -90,5 +90,14 @@ class CoreVisitor implements ItemVisitor
                 }
             }
         }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function supports (array $options) : bool
+    {
+        return true;
     }
 }

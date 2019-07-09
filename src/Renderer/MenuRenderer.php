@@ -47,23 +47,26 @@ class MenuRenderer
         // don't modify the original
         $root = clone $root;
 
-        // apply external visitors
-        // must be applied before voters, as they can generate new nodes
-        if (!empty($this->visitors))
-        {
-            $this->applyVisitors($root);
-        }
-
         // resolve options
         $template = $options["template"] ?? "@BecklynMenu/menu.html.twig";
         unset($options["template"]);
 
         $options = \array_replace([
-            "translationDomain" => false,
+            "translationDomain" => null,
             "currentClass" => "is-current",
             "ancestorClass" => "is-current-ancestor",
             "depth" => null,
+            "key" => null,
         ], $options);
+
+        // apply external visitors
+        // must be applied before voters, as they can generate new nodes
+        $visitors = $this->getSupportedVoters($options);
+
+        if (!empty($visitors))
+        {
+            $this->applyVisitors($visitors, $root, $options);
+        }
 
         // resolve the ancestors
         $root->resolveTree($options["currentClass"], $options["ancestorClass"]);
@@ -76,20 +79,43 @@ class MenuRenderer
 
 
     /**
-     * Applies the visitors to the item and all children.
+     * @param array $options
      *
-     * @param MenuItem $item
+     * @return array
      */
-    private function applyVisitors (MenuItem $item) : void
+    private function getSupportedVoters (array $options) : array
     {
+        $result = [];
+
         foreach ($this->visitors as $visitor)
         {
-            $visitor->visit($item);
+            if ($visitor->supports($options))
+            {
+                $result[] = $visitor;
+            }
+        }
+
+        return $result;
+    }
+
+
+    /**
+     * Applies the visitors to the item and all children.
+     *
+     * @param ItemVisitor[] $visitors
+     * @param MenuItem      $item
+     * @param array         $options
+     */
+    private function applyVisitors (array $visitors, MenuItem $item, array $options) : void
+    {
+        foreach ($visitors as $visitor)
+        {
+            $visitor->visit($item, $options);
         }
 
         foreach ($item->getChildren() as $child)
         {
-            $this->applyVisitors($child);
+            $this->applyVisitors($visitors, $child, $options);
         }
     }
 }
