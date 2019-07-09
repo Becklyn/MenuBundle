@@ -795,7 +795,7 @@ class MenuItem
 
         foreach ($oldChildren as $child)
         {
-            $this->children[] = clone $child;
+            $this->addChild(clone $child);
         }
     }
 
