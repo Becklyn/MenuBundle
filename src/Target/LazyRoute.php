@@ -75,11 +75,11 @@ class LazyRoute
     /**
      * @param UrlGeneratorInterface $urlGenerator
      *
-     * @return string
-     *
      * @throws RouteNotFoundException
      * @throws MissingMandatoryParametersException
      * @throws InvalidParameterException
+     *
+     * @return string
      */
     public function generate (UrlGeneratorInterface $urlGenerator) : string
     {

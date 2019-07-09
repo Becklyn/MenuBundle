@@ -48,7 +48,7 @@ class SimpleRouteVoter implements VoterInterface
         // be stored in the extra `_route`
         $targetRoute = $item->getExtra("_route");
 
-        return $targetRoute !== null
+        return null !== $targetRoute
             ? $targetRoute === $route
             : null;
     }

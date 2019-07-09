@@ -5,7 +5,6 @@ namespace Becklyn\Menu\Visitor;
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Target\LazyRoute;
 use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
