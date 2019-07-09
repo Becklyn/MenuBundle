@@ -1,10 +1,11 @@
 {% extends "@BecklynMenu/root.html.twig" %}
 
-
-
-
+{#-
+ #  Renders a list of children of the given item.
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
 {%- block children -%}
-    {#- @var \Becklyn\Menu\Item\MenuItem item -#}
     {%- set children = item.visibleChildren -%}
 
     {%- if children is not empty and (options.depth is null or options.depth > item.level) -%}
@@ -19,8 +20,12 @@
 {%- endblock -%}
 
 
+{#-
+ #  Renders the list item of a single item
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
 {%- block listItem -%}
-    {#- @var \Becklyn\Menu\Item\MenuItem item -#}
     <li{{ _self.attributes(item.listItemAttributes) }}>
         {{- block("item") -}}
         {{- block("children") -}}
@@ -28,26 +33,42 @@
 {%- endblock -%}
 
 
+{#-
+ #  Renders the content of a single item (link or span basically)
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
 {%- block item -%}
-    {#- @var \Becklyn\Menu\Item\MenuItem item -#}
     {%- set attributes = item.listItemAttributes -%}
     {{- item.target is not null ? block("linkElement") : block("spanElement") -}}
 {%- endblock -%}
 
 
+{#-
+ #  The content of an item, if it is a link
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
 {%- block linkElement -%}
-    {#- @var \Becklyn\Menu\Item\MenuItem item -#}
     <a href="{{ item.target }}"{{ _self.attributes(item.linkAttributes) }}>{{ block("label") }}</a>
 {%- endblock -%}
 
 
+{#-
+ #  The content of an item, if it is not a link
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
 {%- block spanElement -%}
-    {#- @var \Becklyn\Menu\Item\MenuItem item -#}
     <span{{ _self.attributes(item.linkAttributes) }}>{{ block("label") }}</span>
 {%- endblock -%}
 
 
-
+{#-
+ #  The label (textual content) of an item
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
 {%- block label -%}
     {%- if options.translationDomain is not same as (false) -%}
         {{ item.label | trans([], options.translationDomain) }}
@@ -57,6 +78,11 @@
 {%- endblock -%}
 
 
+{#-
+ #  Renders a list of HTML attributes to a string
+ #
+ #  @var array attributes
+-#}
 {%- macro attributes (attributes) -%}
     {%- for name, value in attributes -%}
         {%- if value is not none and value is not same as(false) -%}
