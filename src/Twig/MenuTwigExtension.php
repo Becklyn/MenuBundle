@@ -41,7 +41,7 @@ class MenuTwigExtension extends AbstractExtension implements ServiceSubscriberIn
     /**
      * @inheritDoc
      */
-    public function getFunctions ()
+    public function getFunctions () : array
     {
         return [
             new TwigFunction("menu_render", [$this, "renderMenu"], ["is_safe" => ["html"]]),
@@ -52,7 +52,7 @@ class MenuTwigExtension extends AbstractExtension implements ServiceSubscriberIn
     /**
      * @inheritDoc
      */
-    public static function getSubscribedServices ()
+    public static function getSubscribedServices () : array
     {
         return [
             MenuRenderer::class,
