@@ -3,6 +3,7 @@
 namespace Becklyn\Menu\Item;
 
 use Becklyn\Menu\Exception\InvalidTargetException;
+use Becklyn\Menu\Sorter\MenuItemSorter;
 use Becklyn\Menu\Target\LazyRoute;
 
 class MenuItem
@@ -126,6 +127,14 @@ class MenuItem
 
 
     /**
+     * The sort method for sorting the children of the item.
+     *
+     * @var string
+     */
+    private $sort = MenuItemSorter::SORT_PRIORITY;
+
+
+    /**
      * The children of the menu item.
      *
      * @var MenuItem[]
@@ -198,6 +207,11 @@ class MenuItem
         if (isset($options["security"]))
         {
             $this->setSecurity($options["security"]);
+        }
+
+        if (isset($options["sort"]))
+        {
+            $this->setSort($options["sort"]);
         }
     }
 
@@ -568,6 +582,29 @@ class MenuItem
     //endregion
 
 
+    //region $this->sort
+    /**
+     * @return string
+     */
+    public function getSort () : string
+    {
+        return $this->sort;
+    }
+
+
+    /**
+     * @param string $sort
+     *
+     * @return MenuItem
+     */
+    public function setSort (string $sort) : self
+    {
+        $this->sort = $sort;
+        return $this;
+    }
+    //endregion
+
+
     //region $this->children
     /**
      * @param string $name
@@ -735,46 +772,10 @@ class MenuItem
             $this->addListItemClass($ancestorClass);
         }
 
-        // sort by priority
-        $this->children = $this->sort($this->children);
+        // sort children
+        $this->children = MenuItemSorter::sort($this->sort, $this->children);
 
         return $this->current || $isCurrentAncestor;
-    }
-
-
-    /**
-     * Sorts the children by desc priority (stable).
-     *
-     * @param MenuItem[] $items
-     *
-     * @return MenuItem[]
-     */
-    private function sort (array $items) : array
-    {
-        $entries = [];
-
-        foreach ($items as $index => $item)
-        {
-            $entries[] = [$index, $item->priority];
-        }
-
-        \usort(
-            $entries,
-            function (array $left, array $right)
-            {
-                // sort desc by priorities. If they are falsy (= 0), then sort asc by key
-                return ($right[1] - $left[1]) ?: $left[0] - $right[0];
-            }
-        );
-
-        $result = [];
-
-        foreach ($entries as $entry)
-        {
-            $result[] = $items[$entry[0]];
-        }
-
-        return $result;
     }
 
 
