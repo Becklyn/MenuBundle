@@ -75,7 +75,6 @@ class DepthRenderingTest extends TestCase
             ->createChild("1.1.1.1.1");
 
         $html = $renderer->render($root->find("start"), ["depth" => 2]);
-        echo($html);
         $crawler = new Crawler($html);
 
         self::assertCount(1, $crawler->filter("ul.menu-level-0"), "1 li under root");
