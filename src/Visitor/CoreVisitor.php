@@ -5,6 +5,8 @@ namespace Becklyn\Menu\Visitor;
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Target\LazyRoute;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -46,7 +48,24 @@ class CoreVisitor implements ItemVisitor
         // replace target with URL
         if ($target instanceof LazyRoute)
         {
-            $item->setTarget($target->generate($this->urlGenerator));
+            // store the previous route in an extra attribute
+            $item->setExtra("_route", $target->getRoute());
+
+            try
+            {
+                $item->setTarget($target->generate($this->urlGenerator));
+            }
+            catch (MissingMandatoryParametersException $exception)
+            {
+                // ignore exception if no parameters were given
+                // otherwise -> rethrow
+                if (!empty($target->getParameters()))
+                {
+                    throw $exception;
+                }
+
+                $item->setTarget(null);
+            }
         }
 
         // check security
