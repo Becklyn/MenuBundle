@@ -5,15 +5,14 @@ namespace Becklyn\Menu\Renderer;
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Visitor\ItemVisitor;
 use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 
-class MenuRenderer implements ServiceSubscriberInterface
+class MenuRenderer
 {
     /**
-     * @var ContainerInterface
+     * @var Environment
      */
-    private $locator;
+    private $twig;
 
 
     /**
@@ -26,9 +25,9 @@ class MenuRenderer implements ServiceSubscriberInterface
      * @param ContainerInterface $locator
      * @param ItemVisitor[]      $visitors
      */
-    public function __construct (ContainerInterface $locator, iterable $visitors)
+    public function __construct (Environment $twig, iterable $visitors)
     {
-        $this->locator = $locator;
+        $this->twig = $twig;
         $this->visitors = $visitors;
     }
 
@@ -70,7 +69,7 @@ class MenuRenderer implements ServiceSubscriberInterface
         // resolve the ancestors
         $root->resolveTree($options["currentClass"], $options["ancestorClass"]);
 
-        return $this->locator->get(Environment::class)->render($template, [
+        return $this->twig->render($template, [
             "options" => $options,
             "root" => $root,
         ]);
@@ -93,16 +92,5 @@ class MenuRenderer implements ServiceSubscriberInterface
         {
             $this->applyVisitors($child);
         }
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public static function getSubscribedServices ()
-    {
-        return [
-            Environment::class,
-        ];
     }
 }
