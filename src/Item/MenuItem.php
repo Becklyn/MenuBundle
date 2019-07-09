@@ -783,6 +783,13 @@ class MenuItem
      */
     public function __clone ()
     {
+        // Remove the parent link when cloning, as it wouldn't even be in the list of children.
+        // If the user wants to add it to the same parent, they can do it themselves.
+        // This has the added bonus that if used with `find()` and rendering, that it will reset
+        // the level calculation on this node.
+        $this->parent = null;
+
+        // Explicitly deep clone children.
         $oldChildren = $this->children;
         $this->children = [];
 
