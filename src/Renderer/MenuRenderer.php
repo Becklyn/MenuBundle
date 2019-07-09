@@ -56,6 +56,7 @@ class MenuRenderer
             "currentClass" => "is-current",
             "ancestorClass" => "is-current-ancestor",
             "depth" => null,
+            "key" => null,
         ], $options);
 
         // apply external visitors
