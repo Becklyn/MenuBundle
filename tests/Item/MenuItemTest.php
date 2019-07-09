@@ -77,10 +77,22 @@ class MenuItemTest extends TestCase
         $parent = new MenuItem("parent");
         $child = $parent->createChild("child");
         $grandchild = $child->createChild("grandchild");
+        $youngest = $grandchild->createChild("grandchild");
 
         self::assertSame(0, $parent->getLevel());
         self::assertSame(1, $child->getLevel());
         self::assertSame(2, $grandchild->getLevel());
+        self::assertSame(3, $youngest->getLevel());
+
+        // remove grandchild from the tree and make it a new root
+        $grandchild->setParent(null);
+
+        // these should be unchanged
+        self::assertSame(0, $parent->getLevel());
+        self::assertSame(1, $child->getLevel());
+        // these should start from 0 again
+        self::assertSame(0, $grandchild->getLevel());
+        self::assertSame(1, $youngest->getLevel());
     }
 
 
@@ -226,4 +238,40 @@ class MenuItemTest extends TestCase
         self::assertSame($expectedLabels, $actualLabels);
     }
 
+
+    /**
+     *
+     */
+    public function testCloneChildrenReferences () : void
+    {
+        $root = new MenuItem();
+        $root->createChild("test");
+
+        self::assertSame($root, $root->getChildren()[0]->getParent());
+
+        // clone should update the children and leave the old ones intact
+        $clone = clone $root;
+        self::assertSame($clone, $clone->getChildren()[0]->getParent());
+        self::assertSame($root, $root->getChildren()[0]->getParent());
+    }
+
+
+    /**
+     *
+     */
+    public function testCloneParentReferences () : void
+    {
+        $root = new MenuItem();
+        $child = $root->createChild("test");
+
+        self::assertSame($child, $root->getChildren()[0]);
+        self::assertNotNull($child->getParent());
+
+        // clone should update the children and leave the old ones intact
+        $clone = clone $child;
+        self::assertNotSame($clone, $child);
+        // the old relation stays intact
+        self::assertSame($child, $root->getChildren()[0]);
+        self::assertNull($clone->getParent());
+    }
 }
