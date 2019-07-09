@@ -4,8 +4,9 @@ namespace Becklyn\Menu\Visitor;
 
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Target\LazyRoute;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -27,13 +28,25 @@ class CoreVisitor implements ItemVisitor
 
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+
+    /**
      * @param UrlGeneratorInterface         $urlGenerator
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param LoggerInterface               $logger
      */
-    public function __construct (UrlGeneratorInterface $urlGenerator, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct (
+        UrlGeneratorInterface $urlGenerator,
+        AuthorizationCheckerInterface $authorizationChecker,
+        LoggerInterface $logger
+    )
     {
         $this->urlGenerator = $urlGenerator;
         $this->authorizationChecker = $authorizationChecker;
+        $this->logger = $logger;
     }
 
 
@@ -62,7 +75,19 @@ class CoreVisitor implements ItemVisitor
 
             if ($item->isVisible())
             {
-                $item->setTarget($target->generate($this->urlGenerator));
+                try
+                {
+                    $item->setTarget($target->generate($this->urlGenerator));
+                }
+                catch (ExceptionInterface $exception)
+                {
+                    $this->logger->error("Failed to resolve LazyRoute in item {item}: {message}", [
+                        "item" => $item->getLabel(),
+                        "message" => $exception->getMessage(),
+                        "exception" => $exception,
+                    ]);
+                    $item->setTarget(null);
+                }
             }
         }
     }
