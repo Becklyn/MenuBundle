@@ -18,7 +18,7 @@ class MenuTwigExtension extends AbstractExtension implements ServiceSubscriberIn
 
 
     /**
-     * @param ContainerInterface $renderer
+     * @param ContainerInterface $locator
      */
     public function __construct (ContainerInterface $locator)
     {

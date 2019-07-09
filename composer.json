@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": "^7.2",
+        "psr/log": "^1.1",
         "symfony/config": "^4.3",
         "symfony/dependency-injection": "^4.3",
         "symfony/expression-language": "^4.3",

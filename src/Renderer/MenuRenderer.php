@@ -4,7 +4,6 @@ namespace Becklyn\Menu\Renderer;
 
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Visitor\ItemVisitor;
-use Psr\Container\ContainerInterface;
 use Twig\Environment;
 
 class MenuRenderer
@@ -22,8 +21,8 @@ class MenuRenderer
 
 
     /**
-     * @param ContainerInterface $locator
-     * @param ItemVisitor[]      $visitors
+     * @param Environment   $twig
+     * @param ItemVisitor[] $visitors
      */
     public function __construct (Environment $twig, iterable $visitors)
     {

@@ -4,7 +4,9 @@ namespace Becklyn\Menu\Visitor;
 
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Target\LazyRoute;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -26,13 +28,25 @@ class CoreVisitor implements ItemVisitor
 
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+
+    /**
      * @param UrlGeneratorInterface         $urlGenerator
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param LoggerInterface               $logger
      */
-    public function __construct (UrlGeneratorInterface $urlGenerator, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct (
+        UrlGeneratorInterface $urlGenerator,
+        AuthorizationCheckerInterface $authorizationChecker,
+        LoggerInterface $logger
+    )
     {
         $this->urlGenerator = $urlGenerator;
         $this->authorizationChecker = $authorizationChecker;
+        $this->logger = $logger;
     }
 
 
@@ -43,18 +57,37 @@ class CoreVisitor implements ItemVisitor
     {
         $target = $item->getTarget();
 
-        // replace target with URL
-        if ($target instanceof LazyRoute)
-        {
-            $item->setTarget($target->generate($this->urlGenerator));
-        }
-
         // check security
         if (null !== $item->getSecurity())
         {
             if (!$this->authorizationChecker->isGranted(new Expression($item->getSecurity())))
             {
                 $item->setVisible(false);
+            }
+        }
+
+        // replace target with URL
+        // do it after the security check, as it might hide the node
+        if ($target instanceof LazyRoute)
+        {
+            // store the previous route in an extra attribute
+            $item->setExtra("_route", $target->getRoute());
+
+            if ($item->isVisible())
+            {
+                try
+                {
+                    $item->setTarget($target->generate($this->urlGenerator));
+                }
+                catch (ExceptionInterface $exception)
+                {
+                    $this->logger->error("Failed to resolve LazyRoute in item {item}: {message}", [
+                        "item" => $item->getLabel(),
+                        "message" => $exception->getMessage(),
+                        "exception" => $exception,
+                    ]);
+                    $item->setTarget(null);
+                }
             }
         }
     }
