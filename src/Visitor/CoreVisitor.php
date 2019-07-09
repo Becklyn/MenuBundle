@@ -44,35 +44,25 @@ class CoreVisitor implements ItemVisitor
     {
         $target = $item->getTarget();
 
-        // replace target with URL
-        if ($target instanceof LazyRoute)
-        {
-            // store the previous route in an extra attribute
-            $item->setExtra("_route", $target->getRoute());
-
-            try
-            {
-                $item->setTarget($target->generate($this->urlGenerator));
-            }
-            catch (MissingMandatoryParametersException $exception)
-            {
-                // ignore exception if no parameters were given
-                // otherwise -> rethrow
-                if (!empty($target->getParameters()))
-                {
-                    throw $exception;
-                }
-
-                $item->setTarget(null);
-            }
-        }
-
         // check security
         if (null !== $item->getSecurity())
         {
             if (!$this->authorizationChecker->isGranted(new Expression($item->getSecurity())))
             {
                 $item->setVisible(false);
+            }
+        }
+
+        // replace target with URL
+        // do it after the security check, as it might hide the node
+        if ($target instanceof LazyRoute)
+        {
+            // store the previous route in an extra attribute
+            $item->setExtra("_route", $target->getRoute());
+
+            if ($item->isVisible())
+            {
+                $item->setTarget($target->generate($this->urlGenerator));
             }
         }
     }
