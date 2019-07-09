@@ -43,4 +43,12 @@ class VoterVisitor implements ItemVisitor
         }
     }
 
+
+    /**
+     * @inheritDoc
+     */
+    public function supports (array $options) : bool
+    {
+        return \count($this->voters) > 0;
+    }
 }

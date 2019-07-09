@@ -91,4 +91,13 @@ class CoreVisitor implements ItemVisitor
             }
         }
     }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function supports (array $options) : bool
+    {
+        return true;
+    }
 }

@@ -47,13 +47,6 @@ class MenuRenderer
         // don't modify the original
         $root = clone $root;
 
-        // apply external visitors
-        // must be applied before voters, as they can generate new nodes
-        if (!empty($this->visitors))
-        {
-            $this->applyVisitors($root);
-        }
-
         // resolve options
         $template = $options["template"] ?? "@BecklynMenu/menu.html.twig";
         unset($options["template"]);
@@ -64,6 +57,14 @@ class MenuRenderer
             "ancestorClass" => "is-current-ancestor",
             "depth" => null,
         ], $options);
+
+        // apply external visitors
+        // must be applied before voters, as they can generate new nodes
+        $visitors = $this->getSupportedVoters($options);
+        if (!empty($visitors))
+        {
+            $this->applyVisitors($visitors, $root);
+        }
 
         // resolve the ancestors
         $root->resolveTree($options["currentClass"], $options["ancestorClass"]);
@@ -76,20 +77,42 @@ class MenuRenderer
 
 
     /**
+     * @param array $options
+     *
+     * @return array
+     */
+    private function getSupportedVoters (array $options) : array
+    {
+        $result = [];
+
+        foreach ($this->visitors as $visitor)
+        {
+            if ($visitor->supports($options))
+            {
+                $result[] = $visitor;
+            }
+        }
+
+        return $result;
+    }
+
+
+    /**
      * Applies the visitors to the item and all children.
      *
-     * @param MenuItem $item
+     * @param ItemVisitor[] $visitors
+     * @param MenuItem      $item
      */
-    private function applyVisitors (MenuItem $item) : void
+    private function applyVisitors (array $visitors, MenuItem $item) : void
     {
-        foreach ($this->visitors as $visitor)
+        foreach ($visitors as $visitor)
         {
             $visitor->visit($item);
         }
 
         foreach ($item->getChildren() as $child)
         {
-            $this->applyVisitors($child);
+            $this->applyVisitors($visitors, $child);
         }
     }
 }
