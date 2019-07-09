@@ -77,10 +77,22 @@ class MenuItemTest extends TestCase
         $parent = new MenuItem("parent");
         $child = $parent->createChild("child");
         $grandchild = $child->createChild("grandchild");
+        $youngest = $grandchild->createChild("grandchild");
 
         self::assertSame(0, $parent->getLevel());
         self::assertSame(1, $child->getLevel());
         self::assertSame(2, $grandchild->getLevel());
+        self::assertSame(3, $youngest->getLevel());
+
+        // remove grandchild from the tree and make it a new root
+        $grandchild->setParent(null);
+
+        // these should be unchanged
+        self::assertSame(0, $parent->getLevel());
+        self::assertSame(1, $child->getLevel());
+        // these should start from 0 again
+        self::assertSame(0, $grandchild->getLevel());
+        self::assertSame(1, $youngest->getLevel());
     }
 
 
