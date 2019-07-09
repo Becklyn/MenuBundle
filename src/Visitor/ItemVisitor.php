@@ -10,15 +10,16 @@ interface ItemVisitor
      * Visits the item.
      *
      * @param MenuItem $item
+     * @param array    $options the render options
      */
-    public function visit (MenuItem $item) : void;
+    public function visit (MenuItem $item, array $options) : void;
 
 
     /**
      * Returns whether the visitor supports the menu item.
      * If it doesn't support it, it will not be applied in this walk.
      *
-     * @param array $options    the render options
+     * @param array $options the render options
      *
      * @return bool
      */

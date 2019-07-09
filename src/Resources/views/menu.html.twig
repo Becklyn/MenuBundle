@@ -70,11 +70,8 @@
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block label -%}
-    {%- if options.translationDomain is not same as (false) -%}
-        {{ item.label | trans([], options.translationDomain) }}
-    {%- else -%}
-        {{ item.label }}
-    {%- endif -%}
+    {# the label will already be translated by a visitor #}
+    {{- item.label -}}
 {%- endblock -%}
 
 

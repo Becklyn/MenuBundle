@@ -52,7 +52,7 @@ class MenuRenderer
         unset($options["template"]);
 
         $options = \array_replace([
-            "translationDomain" => false,
+            "translationDomain" => null,
             "currentClass" => "is-current",
             "ancestorClass" => "is-current-ancestor",
             "depth" => null,
@@ -62,9 +62,10 @@ class MenuRenderer
         // apply external visitors
         // must be applied before voters, as they can generate new nodes
         $visitors = $this->getSupportedVoters($options);
+
         if (!empty($visitors))
         {
-            $this->applyVisitors($visitors, $root);
+            $this->applyVisitors($visitors, $root, $options);
         }
 
         // resolve the ancestors
@@ -103,17 +104,18 @@ class MenuRenderer
      *
      * @param ItemVisitor[] $visitors
      * @param MenuItem      $item
+     * @param array         $options
      */
-    private function applyVisitors (array $visitors, MenuItem $item) : void
+    private function applyVisitors (array $visitors, MenuItem $item, array $options) : void
     {
         foreach ($visitors as $visitor)
         {
-            $visitor->visit($item);
+            $visitor->visit($item, $options);
         }
 
         foreach ($item->getChildren() as $child)
         {
-            $this->applyVisitors($visitors, $child);
+            $this->applyVisitors($visitors, $child, $options);
         }
     }
 }
