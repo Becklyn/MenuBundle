@@ -34,6 +34,12 @@ class CoreVisitor implements ItemVisitor
 
 
     /**
+     * @var bool
+     */
+    private $isDebug;
+
+
+    /**
      * @param UrlGeneratorInterface         $urlGenerator
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param LoggerInterface               $logger
@@ -41,12 +47,14 @@ class CoreVisitor implements ItemVisitor
     public function __construct (
         UrlGeneratorInterface $urlGenerator,
         AuthorizationCheckerInterface $authorizationChecker,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        bool $isDebug
     )
     {
         $this->urlGenerator = $urlGenerator;
         $this->authorizationChecker = $authorizationChecker;
         $this->logger = $logger;
+        $this->isDebug = $isDebug;
     }
 
 
@@ -86,6 +94,12 @@ class CoreVisitor implements ItemVisitor
                         "message" => $exception->getMessage(),
                         "exception" => $exception,
                     ]);
+
+                    if ($this->isDebug)
+                    {
+                        throw $exception;
+                    }
+
                     $item->setTarget(null);
                 }
             }

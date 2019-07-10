@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $isDebug: '%kernel.debug%'
 
     Becklyn\Menu\:
         resource: '../../*'
@@ -15,8 +17,6 @@ services:
             - { name: becklyn.menu.visitor, priority: -1000 }
 
     Becklyn\Menu\Visitor\TranslationVisitor:
-        arguments:
-            $voters: !tagged becklyn.menu.voter
         tags:
             - { name: becklyn.menu.visitor, priority: -1100 }
 
