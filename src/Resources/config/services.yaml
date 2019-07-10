@@ -15,8 +15,6 @@ services:
             - { name: becklyn.menu.visitor, priority: -1000 }
 
     Becklyn\Menu\Visitor\TranslationVisitor:
-        arguments:
-            $voters: !tagged becklyn.menu.voter
         tags:
             - { name: becklyn.menu.visitor, priority: -1100 }
 
