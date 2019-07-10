@@ -3,6 +3,7 @@
 namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
+use Becklyn\Menu\Sorter\MenuItemSorter;
 use Becklyn\Menu\Target\LazyRoute;
 use PHPUnit\Framework\TestCase;
 
@@ -31,6 +32,7 @@ class MenuItemTest extends TestCase
             "extras" => $extras,
             "key" => "key",
             "security" => "security",
+            "sort" => MenuItemSorter::SORT_ALPHA,
         ]);
 
         self::assertSame("item", $item->getLabel());
@@ -44,6 +46,7 @@ class MenuItemTest extends TestCase
         self::assertSame($extras, $item->getExtras());
         self::assertSame("key", $item->getKey());
         self::assertSame("security", $item->getSecurity());
+        self::assertSame(MenuItemSorter::SORT_ALPHA, $item->getSort());
     }
 
 
@@ -115,29 +118,6 @@ class MenuItemTest extends TestCase
         self::assertInstanceOf(LazyRoute::class, $routeWith->getTarget());
         self::assertSame("route2", $routeWith->getTarget()->getRoute());
         self::assertSame(["test" => 123], $routeWith->getTarget()->getParameters());
-    }
-
-
-    /**
-     *
-     */
-    public function testPriority () : void
-    {
-        $parent = new MenuItem();
-        $parent->createChild("10", ["priority" => 10]);
-        $parent->createChild("100", ["priority" => 100]);
-        $parent->createChild("-10", ["priority" => -10]);
-        $parent->createChild("50", ["priority" => 50]);
-        $parent->createChild("none");
-
-        $parent->resolveTree();
-
-        $children = $parent->getChildren();
-        self::assertSame("100", $children[0]->getLabel());
-        self::assertSame("50", $children[1]->getLabel());
-        self::assertSame("10", $children[2]->getLabel());
-        self::assertSame("none", $children[3]->getLabel());
-        self::assertSame("-10", $children[4]->getLabel());
     }
 
 
