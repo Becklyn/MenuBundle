@@ -5,7 +5,6 @@ namespace Becklyn\Menu\Target;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -33,11 +32,11 @@ class LazyRoute
 
 
     /**
-     * @param string $route
-     * @param array  $parameters
-     * @param int    $referenceType
+     * @param string $route         the route name  #Route
+     * @param array  $parameters    the parameters required for generating the route
+     * @param int    $referenceType the reference type to generate for this route
      */
-    public function __construct (string $route, array $parameters = [], int $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function __construct (string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         $this->route = $route;
         $this->parameters = $parameters;
