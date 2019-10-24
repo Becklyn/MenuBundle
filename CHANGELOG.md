@@ -1,3 +1,9 @@
+1.1.1
+=====
+
+*   Reintroduce the `sort` option, but as boolean flag to toggle the sorting on/off. Default is off.
+
+
 1.1.0
 =====
 
