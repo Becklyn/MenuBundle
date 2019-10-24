@@ -32,6 +32,7 @@ class MenuItemTest extends TestCase
             "extras" => $extras,
             "key" => "key",
             "security" => "security",
+            "sort" => true,
         ]);
 
         self::assertSame("item", $item->getLabel());
@@ -45,6 +46,7 @@ class MenuItemTest extends TestCase
         self::assertSame($extras, $item->getExtras());
         self::assertSame("key", $item->getKey());
         self::assertSame("security", $item->getSecurity());
+        self::assertSame(true, $item->getSort());
     }
 
 
@@ -251,5 +253,37 @@ class MenuItemTest extends TestCase
         // the old relation stays intact
         self::assertSame($child, $root->getChildren()[0]);
         self::assertNull($clone->getParent());
+    }
+
+
+    /**
+     *
+     */
+    public function testWithSort () : void
+    {
+        $root = new MenuItem(null, ["sort" => true]);
+        $root->createChild("y");
+        $root->createChild("z");
+        $root->createChild("x");
+        $root->resolveTree();
+
+        $labels = \array_map(function (MenuItem $item) { return $item->getLabel(); }, $root->getChildren());
+        self::assertSame(["x", "y", "z"], $labels);
+    }
+
+
+    /**
+     *
+     */
+    public function testWithoutSort () : void
+    {
+        $root = new MenuItem(null);
+        $root->createChild("y");
+        $root->createChild("z");
+        $root->createChild("x");
+        $root->resolveTree();
+
+        $labels = \array_map(function (MenuItem $item) { return $item->getLabel(); }, $root->getChildren());
+        self::assertSame(["y", "z", "x"], $labels);
     }
 }
