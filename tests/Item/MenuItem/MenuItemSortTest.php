@@ -2,93 +2,41 @@
 
 namespace Tests\Becklyn\Menu\Item\MenuItem;
 
-use Becklyn\Menu\Exception\InvalidSortMethodException;
 use Becklyn\Menu\Item\MenuItem;
 use Becklyn\Menu\Sorter\MenuItemSorter;
 use PHPUnit\Framework\TestCase;
 
 class MenuItemSortTest extends TestCase
 {
-    private function buildMenu (string $sort) : MenuItem
+    /**
+     * @return MenuItem[]
+     */
+    private function getItems () : array
     {
-        $root = new MenuItem(null, ["sort" => $sort]);
-        $root->createChild("a", ["priority" => 10]);
-        $root->createChild("z", ["priority" => 100]);
-        $root->createChild("z", ["priority" => 30]);
-        $root->createChild("N", ["priority" => 25]);
-        $root->createChild("y", ["priority" => 100]);
-        $root->createChild("m", ["priority" => 50]);
-        $root->resolveTree();
-
-        return $root;
+        return [
+            new MenuItem("a", ["priority" => 10]),
+            new MenuItem("z", ["priority" => 100]),
+            new MenuItem("z", ["priority" => 30]),
+            new MenuItem("N", ["priority" => 25]),
+            new MenuItem("y", ["priority" => 100]),
+            new MenuItem("m", ["priority" => 50]),
+            new MenuItem("1"),
+            new MenuItem("2"),
+            new MenuItem("-1", ["priority" => -10]),
+            new MenuItem("-2", ["priority" => -20]),
+            new MenuItem(null, ["priority" => -20]),
+        ];
     }
 
     /**
      *
      */
-    public function testNoneMethod () : void
+    public function testSort () : void
     {
-        $root = $this->buildMenu(MenuItemSorter::SORT_NONE);
+        $sorted = MenuItemSorter::sort($this->getItems());
+        $labels = \array_map(function (MenuItem $item) { return $item->getLabel(); }, $sorted);
 
-        foreach (["a", "z", "z", "N", "y", "m"] as $index => $label)
-        {
-            self::assertSame($label, $root->getChildren()[$index]->getLabel(), "Label at index {$index}");
-        }
-    }
-
-    /**
-     *
-     */
-    public function testAlphaMethod () : void
-    {
-        $root = $this->buildMenu(MenuItemSorter::SORT_ALPHA);
-
-        foreach (["a", "m", "N", "y", "z", "z"] as $index => $label)
-        {
-            self::assertSame($label, $root->getChildren()[$index]->getLabel(), "Label at index {$index}");
-        }
-
-        // sorting is stable, so it will keep the order of the priorities
-        self::assertSame(100, $root->getChildren()[4]->getPriority());
-        self::assertSame(30, $root->getChildren()[5]->getPriority());
-    }
-
-    /**
-     *
-     */
-    public function testPriorityMethod () : void
-    {
-        $root = $this->buildMenu(MenuItemSorter::SORT_PRIORITY);
-
-        // testing that the order is stable is already done with z & y
-        foreach (["z", "y", "m", "z", "N", "a"] as $index => $label)
-        {
-            self::assertSame($label, $root->getChildren()[$index]->getLabel(), "Label at index {$index}");
-        }
-    }
-
-    /**
-     *
-     */
-    public function testInvalidMethod () : void
-    {
-        $this->expectException(InvalidSortMethodException::class);
-        $this->buildMenu("invalid");
-    }
-
-
-    /**
-     *
-     */
-    public function testNullLabelWithAlphaSort ()
-    {
-        $root = new MenuItem(null, ["sort" => MenuItemSorter::SORT_ALPHA]);
-        $child1 = $root->createChild("a");
-        $child2 = new MenuItem();
-        $root->addChild($child2);
-        $root->resolveTree();
-
-        self::assertSame($child2, $root->getChildren()[0]);
-        self::assertSame($child1, $root->getChildren()[1]);
+        $expected = ["y", "z", "m", "z", "N", "a", "1", "2", "-1", null, "-2"];
+        self::assertSame($expected, $labels);
     }
 }
