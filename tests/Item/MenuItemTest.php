@@ -32,7 +32,6 @@ class MenuItemTest extends TestCase
             "extras" => $extras,
             "key" => "key",
             "security" => "security",
-            "sort" => MenuItemSorter::SORT_ALPHA,
         ]);
 
         self::assertSame("item", $item->getLabel());
@@ -46,7 +45,6 @@ class MenuItemTest extends TestCase
         self::assertSame($extras, $item->getExtras());
         self::assertSame("key", $item->getKey());
         self::assertSame("security", $item->getSecurity());
-        self::assertSame(MenuItemSorter::SORT_ALPHA, $item->getSort());
     }
 
 

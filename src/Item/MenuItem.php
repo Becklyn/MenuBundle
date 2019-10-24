@@ -127,14 +127,6 @@ class MenuItem
 
 
     /**
-     * The sort method for sorting the children of the item.
-     *
-     * @var string
-     */
-    private $sort = MenuItemSorter::SORT_PRIORITY;
-
-
-    /**
      * The children of the menu item.
      *
      * @var MenuItem[]
@@ -207,11 +199,6 @@ class MenuItem
         if (isset($options["security"]))
         {
             $this->setSecurity($options["security"]);
-        }
-
-        if (isset($options["sort"]))
-        {
-            $this->setSort($options["sort"]);
         }
     }
 
@@ -582,29 +569,6 @@ class MenuItem
     //endregion
 
 
-    //region $this->sort
-    /**
-     * @return string
-     */
-    public function getSort () : string
-    {
-        return $this->sort;
-    }
-
-
-    /**
-     * @param string $sort
-     *
-     * @return MenuItem
-     */
-    public function setSort (string $sort) : self
-    {
-        $this->sort = $sort;
-        return $this;
-    }
-    //endregion
-
-
     //region $this->children
     /**
      * @param string $name
@@ -773,7 +737,7 @@ class MenuItem
         }
 
         // sort children
-        $this->children = MenuItemSorter::sort($this->sort, $this->children);
+        $this->children = MenuItemSorter::sort($this->children);
 
         return $this->current || $isCurrentAncestor;
     }
