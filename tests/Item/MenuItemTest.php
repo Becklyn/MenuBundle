@@ -61,14 +61,14 @@ class MenuItemTest extends TestCase
 
         $parent->resolveTree();
 
-        self::assertContains("ancestor", $parent->getListItemAttributes()["class"]);
-        self::assertContains("current", $parent->getListItemAttributes()["class"]);
+        self::assertStringContainsString("ancestor", $parent->getListItemAttributes()["class"]);
+        self::assertStringContainsString("current", $parent->getListItemAttributes()["class"]);
 
-        self::assertNotContains("ancestor", $child->getListItemAttributes()["class"]);
-        self::assertContains("current", $child->getListItemAttributes()["class"]);
+        self::assertStringNotContainsString("ancestor", $child->getListItemAttributes()["class"]);
+        self::assertStringContainsString("current", $child->getListItemAttributes()["class"]);
 
-        self::assertNotContains("ancestor", $grandchild->getListItemAttributes()["class"]);
-        self::assertNotContains("current", $grandchild->getListItemAttributes()["class"]);
+        self::assertStringNotContainsString("ancestor", $grandchild->getListItemAttributes()["class"]);
+        self::assertStringNotContainsString("current", $grandchild->getListItemAttributes()["class"]);
     }
 
 
