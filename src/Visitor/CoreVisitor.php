@@ -40,9 +40,6 @@ class CoreVisitor implements ItemVisitor
 
 
     /**
-     * @param UrlGeneratorInterface         $urlGenerator
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param LoggerInterface               $logger
      */
     public function __construct (
         UrlGeneratorInterface $urlGenerator,

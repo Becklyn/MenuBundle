@@ -18,7 +18,6 @@ class MenuTwigExtension extends AbstractExtension implements ServiceSubscriberIn
 
 
     /**
-     * @param ContainerInterface $locator
      */
     public function __construct (ContainerInterface $locator)
     {
@@ -27,10 +26,7 @@ class MenuTwigExtension extends AbstractExtension implements ServiceSubscriberIn
 
 
     /**
-     * @param MenuItem|null $root
-     * @param array         $options
      *
-     * @return string
      */
     public function renderMenu (?MenuItem $root, array $options = []) : string
     {

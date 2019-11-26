@@ -14,7 +14,6 @@ class TranslationVisitor implements ItemVisitor
 
 
     /**
-     * @param TranslatorInterface $translator
      */
     public function __construct (TranslatorInterface $translator)
     {

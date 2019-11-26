@@ -9,8 +9,7 @@ interface ItemVisitor
     /**
      * Visits the item.
      *
-     * @param MenuItem $item
-     * @param array    $options the render options
+     * @param array $options the render options
      */
     public function visit (MenuItem $item, array $options) : void;
 
@@ -20,8 +19,6 @@ interface ItemVisitor
      * If it doesn't support it, it will not be applied in this walk.
      *
      * @param array $options the render options
-     *
-     * @return bool
      */
     public function supports (array $options) : bool;
 }
