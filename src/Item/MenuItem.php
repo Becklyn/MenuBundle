@@ -144,8 +144,6 @@ class MenuItem
 
 
     /**
-     * @param string|null $label
-     * @param array       $options
      */
     public function __construct (?string $label = null, array $options = [])
     {
@@ -219,7 +217,6 @@ class MenuItem
     //region Accessors
     //region $this->label
     /**
-     * @return string|null
      */
     public function getLabel () : ?string
     {
@@ -228,8 +225,6 @@ class MenuItem
 
 
     /**
-     * @param string|null $label
-     *
      * @return MenuItem
      */
     public function setLabel (?string $label) : self
@@ -280,7 +275,6 @@ class MenuItem
 
     //region $this->priority
     /**
-     * @return int
      */
     public function getPriority () : int
     {
@@ -289,7 +283,6 @@ class MenuItem
 
 
     /**
-     * @param int $priority
      */
     public function setPriority (int $priority) : void
     {
@@ -300,7 +293,6 @@ class MenuItem
 
     //region $this->listItemAttributes
     /**
-     * @return array
      */
     public function getListItemAttributes () : array
     {
@@ -316,7 +308,6 @@ class MenuItem
 
 
     /**
-     * @param array $listItemAttributes
      */
     public function setListItemAttributes (array $listItemAttributes) : self
     {
@@ -326,8 +317,7 @@ class MenuItem
 
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return MenuItem
      */
@@ -341,8 +331,6 @@ class MenuItem
     /**
      * Convenience setter to set a child list class.
      *
-     * @param string $className
-     *
      * @return MenuItem
      */
     public function addListItemClass (string $className) : self
@@ -355,7 +343,6 @@ class MenuItem
 
     //region $this->linkAttributes
     /**
-     * @return array
      */
     public function getLinkAttributes () : array
     {
@@ -371,7 +358,6 @@ class MenuItem
 
 
     /**
-     * @param array $linkAttributes
      */
     public function setLinkAttributes (array $linkAttributes) : self
     {
@@ -381,8 +367,7 @@ class MenuItem
 
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return MenuItem
      */
@@ -396,8 +381,6 @@ class MenuItem
     /**
      * Convenience setter to set a link class.
      *
-     * @param string $className
-     *
      * @return MenuItem
      */
     public function addLinkClass (string $className) : self
@@ -410,7 +393,6 @@ class MenuItem
 
     //region $this->childListAttributes
     /**
-     * @return array
      */
     public function getChildListAttributes () : array
     {
@@ -426,7 +408,6 @@ class MenuItem
 
 
     /**
-     * @param array $childListAttributes
      */
     public function setChildListAttributes (array $childListAttributes) : self
     {
@@ -436,8 +417,7 @@ class MenuItem
 
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return MenuItem
      */
@@ -450,8 +430,6 @@ class MenuItem
 
     /**
      * Convenience setter to set a child list class.
-     *
-     * @param string $className
      *
      * @return MenuItem
      */
@@ -493,7 +471,6 @@ class MenuItem
 
     //region $this->extras
     /**
-     * @return array
      */
     public function getExtras () : array
     {
@@ -502,7 +479,6 @@ class MenuItem
 
 
     /**
-     * @param array $extras
      */
     public function setExtras (array $extras) : void
     {
@@ -511,8 +487,7 @@ class MenuItem
 
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return MenuItem
      */
@@ -524,8 +499,7 @@ class MenuItem
 
 
     /**
-     * @param string $name
-     * @param mixed  $defaultValue
+     * @param mixed $defaultValue
      *
      * @return mixed
      */
@@ -538,7 +512,6 @@ class MenuItem
 
     //region $this->visible
     /**
-     * @return bool
      */
     public function isVisible () : bool
     {
@@ -547,8 +520,6 @@ class MenuItem
 
 
     /**
-     * @param bool $visible
-     *
      * @return MenuItem
      */
     public function setVisible (bool $visible) : self
@@ -561,7 +532,6 @@ class MenuItem
 
     //region $this->current
     /**
-     * @return bool
      */
     public function isCurrent () : bool
     {
@@ -570,8 +540,6 @@ class MenuItem
 
 
     /**
-     * @param bool $current
-     *
      * @return MenuItem
      */
     public function setCurrent (bool $current) : self
@@ -584,7 +552,6 @@ class MenuItem
 
     //region $this->sort
     /**
-     * @return bool
      */
     public function getSort () : bool
     {
@@ -593,8 +560,6 @@ class MenuItem
 
 
     /**
-     * @param bool $sort
-     *
      * @return MenuItem
      */
     public function setSort (bool $sort) : self
@@ -607,8 +572,6 @@ class MenuItem
 
     //region $this->children
     /**
-     * @param string $name
-     * @param array  $options
      */
     public function createChild (string $name, array $options = []) : self
     {
@@ -701,7 +664,6 @@ class MenuItem
 
     //region $this->security
     /**
-     * @return string|null
      */
     public function getSecurity () : ?string
     {
@@ -710,7 +672,6 @@ class MenuItem
 
 
     /**
-     * @param string|null $security
      */
     public function setSecurity (?string $security) : void
     {
@@ -721,7 +682,6 @@ class MenuItem
 
 
     /**
-     * @return int
      */
     public function getLevel () : int
     {
@@ -733,12 +693,6 @@ class MenuItem
 
     /**
      * Resolves the ancestor state for this item and all sub items.
-     *
-     * @param string $currentClass
-     * @param string $ancestorClass
-     * @param int    $level
-     *
-     * @return bool
      *
      * @internal should not be called externally
      */

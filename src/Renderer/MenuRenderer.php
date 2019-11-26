@@ -21,7 +21,6 @@ class MenuRenderer
 
 
     /**
-     * @param Environment   $twig
      * @param ItemVisitor[] $visitors
      */
     public function __construct (Environment $twig, iterable $visitors)
@@ -33,9 +32,6 @@ class MenuRenderer
 
     /**
      * @param MenuItem $root
-     * @param array    $options
-     *
-     * @return string
      */
     public function render (?MenuItem $root, array $options = []) : string
     {
@@ -79,9 +75,7 @@ class MenuRenderer
 
 
     /**
-     * @param array $options
      *
-     * @return array
      */
     private function getSupportedVoters (array $options) : array
     {
@@ -103,8 +97,6 @@ class MenuRenderer
      * Applies the visitors to the item and all children.
      *
      * @param ItemVisitor[] $visitors
-     * @param MenuItem      $item
-     * @param array         $options
      */
     private function applyVisitors (array $visitors, MenuItem $item, array $options) : void
     {

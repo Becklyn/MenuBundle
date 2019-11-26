@@ -17,7 +17,6 @@ class SimpleRouteVoter implements VoterInterface
 
 
     /**
-     * @param RequestStack $requestStack
      */
     public function __construct (RequestStack $requestStack)
     {

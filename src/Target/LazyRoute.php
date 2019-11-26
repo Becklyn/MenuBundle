@@ -45,7 +45,6 @@ class LazyRoute
 
 
     /**
-     * @return string
      */
     public function getRoute () : string
     {
@@ -54,7 +53,6 @@ class LazyRoute
 
 
     /**
-     * @return array
      */
     public function getParameters () : array
     {
@@ -63,7 +61,6 @@ class LazyRoute
 
 
     /**
-     * @return int
      */
     public function getReferenceType () : int
     {
@@ -72,13 +69,9 @@ class LazyRoute
 
 
     /**
-     * @param UrlGeneratorInterface $urlGenerator
-     *
      * @throws RouteNotFoundException
      * @throws MissingMandatoryParametersException
      * @throws InvalidParameterException
-     *
-     * @return string
      */
     public function generate (UrlGeneratorInterface $urlGenerator) : string
     {
