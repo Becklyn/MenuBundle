@@ -1,69 +1,163 @@
 {% extends "@BecklynMenu/root.html.twig" %}
 
+{#
+ # This file renders the default menu.
+ #
+ # Every item that embeds another element should render their *_wrap variant.
+ # The *_wrap blocks define all required variables so that they can all be overwritten.
+ #
+ # When doing a custom layout, then you should normally only need to overwrite the blocks WITHOUT *_wrap,
+ # you can modify the parameters and then just call `parent()`.
+ #}
+
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{# Children (<ul>) #}
+{# ------------------------------------------------------------------------------------------------------------------ #}
 {#-
- #  Renders a list of children of the given item.
+ #  Wrapper: Renders a list of children of the given item.
  #
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
-{%- block children -%}
+{%- block children_wrap -%}
     {%- set children = item.visibleChildren -%}
+    {%- set listAttributes = item.childListAttributes -%}
 
+    {{- block("children") -}}
+{%- endblock children_wrap -%}
+
+
+{#-
+ #  Renders a list of children of the given item.
+ #
+ #  @var array listAttributes
+ #  @var \Becklyn\Menu\Item\MenuItem[] children
+-#}
+{%- block children -%}
     {%- if children is not empty and (options.depth is null or options.depth > item.level) -%}
-        <ul{{ _self.attributes(item.childListAttributes) }}>
+        <ul{{ _self.attributes(listAttributes) }}>
             {%- for child in children -%}
                 {%- with {item: child} -%}
-                    {{- block("listItem") -}}
+                    {{- block("list_item_wrap") -}}
                 {%- endwith -%}
             {%- endfor -%}
         </ul>
     {%- endif -%}
-{%- endblock -%}
+{%- endblock children -%}
+
+
+
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{# List Item (<li>) #}
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{#-
+ #  Wrapper: Renders the list item of a single item
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
+{%- block list_item_wrap -%}
+    {%- set listAttributes = item.listItemAttributes -%}
+
+    {{- block("list_item") -}}
+{%- endblock list_item_wrap -%}
 
 
 {#-
  #  Renders the list item of a single item
  #
+ #  @var array listAttributes
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
-{%- block listItem -%}
-    <li{{ _self.attributes(item.listItemAttributes) }}>
-        {{- block("item") -}}
-        {{- block("children") -}}
+{%- block list_item -%}
+    <li{{ _self.attributes(listAttributes) }}>
+        {{- block("item_wrap") -}}
+        {{- block("children_wrap") -}}
     </li>
-{%- endblock -%}
+{%- endblock list_item -%}
+
+
+
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{# Item (<a> or <span>) #}
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{#-
+ #  Wrapper: Renders the content of a single item (link or span basically)
+ #
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
+{%- block item_wrap -%}
+    {%- set attributes = item.listItemAttributes -%}
+    {%- set target = item.target -%}
+
+    {{- block("item") -}}
+{%- endblock item_wrap -%}
 
 
 {#-
  #  Renders the content of a single item (link or span basically)
  #
+ #  @var string|null target
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block item -%}
-    {%- set attributes = item.listItemAttributes -%}
-    {{- item.target is not null ? block("linkElement") : block("spanElement") -}}
-{%- endblock -%}
+    {{- target is not null ? block("link_item_wrap") : block("text_element_wrap") -}}
+{%- endblock item -%}
 
+
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{# Link item (<a>) #}
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{#-
+ #  WrapperThe content of an item, if it is a link
+ #
+ #  @var string|null target
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
+{%- block link_item_wrap -%}
+    {%- set attributes = item.linkAttributes -%}
+
+    {{- block("link_item") -}}
+{%- endblock link_item_wrap -%}
 
 {#-
  #  The content of an item, if it is a link
  #
+ #  @var array attributes
+ #  @var string|null target
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
-{%- block linkElement -%}
-    <a href="{{ item.target }}"{{ _self.attributes(item.linkAttributes) }}>{{ block("label") }}</a>
-{%- endblock -%}
+{%- block link_item -%}
+    <a href="{{ target }}"{{ _self.attributes(attributes) }}>{{ block("label") }}</a>
+{%- endblock link_item -%}
 
 
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{# Text item (<span>) #}
+{# ------------------------------------------------------------------------------------------------------------------ #}
 {#-
  #  The content of an item, if it is not a link
  #
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
-{%- block spanElement -%}
-    <span{{ _self.attributes(item.linkAttributes) }}>{{ block("label") }}</span>
+{%- block text_element_wrap -%}
+    {%- set attributes = item.linkAttributes -%}
+
+    {{- block("text_element") -}}
+{%- endblock -%}
+
+{#-
+ #  The content of an item, if it is not a link
+ #
+ #  @var array attributes
+ #  @var \Becklyn\Menu\Item\MenuItem item
+-#}
+{%- block text_element -%}
+    <span{{ _self.attributes(attributes) }}>{{ block("label") }}</span>
 {%- endblock -%}
 
 
+{# ------------------------------------------------------------------------------------------------------------------ #}
+{# Helpers #}
+{# ------------------------------------------------------------------------------------------------------------------ #}
 {#-
  #  The label (textual content) of an item
  #
