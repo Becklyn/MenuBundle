@@ -53,7 +53,14 @@ class MenuRenderer
             "ancestorClass" => "is-current-ancestor",
             "depth" => null,
             "key" => null,
+            "rootClass" => null,
         ], $options);
+
+        // set root class
+        if (null !== $options["rootClass"])
+        {
+            $root->addChildListClass($options["rootClass"]);
+        }
 
         // apply external visitors
         // must be applied before voters, as they can generate new nodes

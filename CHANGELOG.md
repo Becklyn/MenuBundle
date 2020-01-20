@@ -2,6 +2,7 @@
 =====
 
 *   (bc) Refactored main template to ease overwriting specific parts.
+*   (feature) Add `rootClass` option, to easily set class on only root.
 
 
 1.1.2
