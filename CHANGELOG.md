@@ -1,3 +1,9 @@
+2.0.0
+=====
+
+*   (bc) Refactored main template to ease overwriting specific parts.
+
+
 1.1.2
 =====
 
