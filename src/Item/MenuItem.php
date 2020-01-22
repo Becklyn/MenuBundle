@@ -127,6 +127,15 @@ class MenuItem
 
 
     /**
+     * Whether the item is an ancestor of the currently selected menu item.
+     * Will only have a valid value after resolving.
+     *
+     * @var bool
+     */
+    private $currentAncestor = false;
+
+
+    /**
      * Whether the item should be sorted.
      *
      * @var bool
@@ -550,6 +559,15 @@ class MenuItem
     //endregion
 
 
+    /**
+     * @return bool
+     */
+    public function isCurrentAncestor () : bool
+    {
+        return $this->currentAncestor;
+    }
+
+
     //region $this->sort
     /**
      */
@@ -715,6 +733,8 @@ class MenuItem
             ->addListItemClass("menu-item")
             ->addChildListClass("menu-list")
             ->addChildListClass("menu-level-{$level}");
+
+        $this->currentAncestor = $isCurrentAncestor;
 
         if ($this->current)
         {
