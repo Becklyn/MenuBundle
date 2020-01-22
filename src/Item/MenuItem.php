@@ -560,7 +560,6 @@ class MenuItem
 
 
     /**
-     * @return bool
      */
     public function isCurrentAncestor () : bool
     {
@@ -847,8 +846,6 @@ class MenuItem
 
     /**
      * Returns whether this element is somehow active.
-     *
-     * @return bool
      */
     public function isAnyCurrent () : bool
     {
