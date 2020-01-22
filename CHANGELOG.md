@@ -4,6 +4,7 @@
 *   (feature) Add convenience getter to get the resolved tree from an item at `MenuRenderer::getResolvedItem()`
 *   (bug) Fix invalid branch alias.
 *   (improvement) Add `isCurrentAncestor()` getter in (resolved) `MenuItem`s.
+*   (improvement) Add `isAnyCurrent()` getter in (resolved) `MenuItem`s.
 
 
 2.0.0

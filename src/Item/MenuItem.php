@@ -843,4 +843,15 @@ class MenuItem
 
         return \array_reverse($hierarchy);
     }
+
+
+    /**
+     * Returns whether this element is somehow active.
+     *
+     * @return bool
+     */
+    public function isAnyCurrent () : bool
+    {
+        return $this->current || $this->currentAncestor;
+    }
 }

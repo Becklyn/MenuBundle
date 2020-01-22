@@ -286,4 +286,67 @@ class MenuItemTest extends TestCase
         $labels = \array_map(function (MenuItem $item) { return $item->getLabel(); }, $root->getChildren());
         self::assertSame(["y", "z", "x"], $labels);
     }
+
+
+    /**
+     * Tests that the resolving of the ancestor works correctly
+     */
+    public function testCurrentAncestor ()
+    {
+        $root = new MenuItem();
+        $child1 = $root->createChild("label1");
+        $child2 = $root->createChild("label2");
+
+        $child1_1 = $child1->createChild("label1.2");
+        $child1_1->setCurrent(true);
+
+        $root->resolveTree();
+
+        self::assertTrue($child1_1->isCurrent());
+        self::assertFalse($child1_1->isCurrentAncestor());
+
+        self::assertFalse($child1->isCurrent());
+        self::assertTrue($child1->isCurrentAncestor());
+
+        self::assertFalse($child2->isCurrent());
+        self::assertFalse($child2->isCurrentAncestor());
+
+        self::assertFalse($root->isCurrent());
+        self::assertTrue($root->isCurrentAncestor());
+    }
+
+
+    /**
+     * Tests the `isAnyCurrent()` variations
+     */
+    public function testAnyCurrent () : void
+    {
+        $root = new MenuItem();
+        $child = $root->createChild("child");
+
+        $child->setCurrent(true);
+        $root->resolveTree();
+
+        self::assertTrue($child->isCurrent());
+        self::assertFalse($child->isCurrentAncestor());
+        self::assertTrue($child->isAnyCurrent());
+
+        self::assertFalse($root->isCurrent());
+        self::assertTrue($root->isCurrentAncestor());
+        self::assertTrue($root->isAnyCurrent());
+
+
+        $separate = new MenuItem();
+        self::assertFalse($separate->isCurrent());
+        self::assertFalse($separate->isCurrentAncestor());
+        self::assertFalse($separate->isAnyCurrent());
+
+        $both = new MenuItem();
+        $both->createChild("child")->setCurrent(true);
+        $both->setCurrent(true);
+        $both->resolveTree();
+        self::assertTrue($both->isCurrent());
+        self::assertTrue($both->isCurrentAncestor());
+        self::assertTrue($both->isAnyCurrent());
+    }
 }
