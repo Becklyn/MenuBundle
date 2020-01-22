@@ -1,3 +1,10 @@
+2.1.0
+=====
+
+*   (feature) Add convenience getter to get the resolved tree from an item at `MenuRenderer::getResolvedItem()`
+*   (bug) Fix invalid branch alias.
+
+
 2.0.0
 =====
 
