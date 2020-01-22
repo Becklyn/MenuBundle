@@ -31,7 +31,18 @@ class MenuRenderer
 
 
     /**
-     * @param MenuItem $root
+     * Returns the resolved tree item for the given root
+     */
+    public function getResolvedItem (?MenuItem $root, array $options = []) : ?MenuItem
+    {
+        return null !== $root
+            ? $this->resolveItem($root, $this->resolveOptions($options))
+            : null;
+    }
+
+
+    /**
+     * Renders the tree from the given root
      */
     public function render (?MenuItem $root, array $options = []) : string
     {
@@ -40,13 +51,24 @@ class MenuRenderer
             return "";
         }
 
-        // don't modify the original
-        $root = clone $root;
+        // resolve template
+        $template = $options["template"] ?? "@BecklynMenu/menu.html.twig";
 
         // resolve options
-        $template = $options["template"] ?? "@BecklynMenu/menu.html.twig";
-        unset($options["template"]);
+        $resolvedOptions = $this->resolveOptions($options);
 
+        return $this->twig->render($template, [
+            "options" => $resolvedOptions,
+            "root" => $this->resolveItem($root, $resolvedOptions),
+        ]);
+    }
+
+
+    /**
+     * Resolves the options
+     */
+    private function resolveOptions (array $options) : array
+    {
         $options = \array_replace([
             "translationDomain" => null,
             "currentClass" => "is-current",
@@ -56,28 +78,38 @@ class MenuRenderer
             "rootClass" => null,
         ], $options);
 
+        unset($options["template"]);
+        return $options;
+    }
+
+
+    /**
+     * Resolves the item
+     */
+    private function resolveItem (MenuItem $root, array $resolvedOptions) : MenuItem
+    {
+        // don't modify the original
+        $root = clone $root;
+
         // set root class
-        if (null !== $options["rootClass"])
+        if (null !== $resolvedOptions["rootClass"])
         {
-            $root->addChildListClass($options["rootClass"]);
+            $root->addChildListClass($resolvedOptions["rootClass"]);
         }
 
         // apply external visitors
         // must be applied before voters, as they can generate new nodes
-        $visitors = $this->getSupportedVoters($options);
+        $visitors = $this->getSupportedVoters($resolvedOptions);
 
         if (!empty($visitors))
         {
-            $this->applyVisitors($visitors, $root, $options);
+            $this->applyVisitors($visitors, $root, $resolvedOptions);
         }
 
         // resolve the ancestors
-        $root->resolveTree($options["currentClass"], $options["ancestorClass"]);
+        $root->resolveTree($resolvedOptions["currentClass"], $resolvedOptions["ancestorClass"]);
 
-        return $this->twig->render($template, [
-            "options" => $options,
-            "root" => $root,
-        ]);
+        return $root;
     }
 
 
