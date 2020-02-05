@@ -649,6 +649,7 @@ class MenuItem
         if (false !== $index)
         {
             \array_splice($this->children, $index, 1, null);
+            $child->setParent(null);
         }
 
         return $this;

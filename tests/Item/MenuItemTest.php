@@ -351,7 +351,47 @@ class MenuItemTest extends TestCase
     }
 
 
-    public function testRemoveAll ()
+    /**
+     *
+     */
+    public function testRemoveChild () : void
+    {
+        $root = new MenuItem();
+        $child = $root->createChild("1");
+        $otherRoot = new MenuItem();
+        $otherChild = $otherRoot->createChild("other");
+
+        self::assertCount(1, $root->getChildren());
+        self::assertSame($child, $root->getChildren()[0]);
+        self::assertSame($root, $child->getParent());
+        self::assertCount(1, $otherRoot->getChildren());
+        self::assertSame($otherChild, $otherRoot->getChildren()[0]);
+        self::assertSame($otherRoot, $otherChild->getParent());
+
+        // should change nothing -> wrong parent
+        $root->removeChild($otherChild);
+
+        self::assertCount(1, $root->getChildren());
+        self::assertSame($child, $root->getChildren()[0]);
+        self::assertSame($root, $child->getParent());
+        self::assertCount(1, $otherRoot->getChildren());
+        self::assertSame($otherChild, $otherRoot->getChildren()[0]);
+        self::assertSame($otherRoot, $otherChild->getParent());
+
+        $root->removeChild($child);
+
+        self::assertCount(0, $root->getChildren());
+        self::assertSame(null, $child->getParent());
+        self::assertCount(1, $otherRoot->getChildren());
+        self::assertSame($otherChild, $otherRoot->getChildren()[0]);
+        self::assertSame($otherRoot, $otherChild->getParent());
+    }
+
+
+    /**
+     *
+     */
+    public function testRemoveAllChildren () : void
     {
         $root = new MenuItem();
         $child1 = $root->createChild("1");
