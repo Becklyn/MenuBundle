@@ -3,7 +3,6 @@
 namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
-use Becklyn\Menu\Sorter\MenuItemSorter;
 use Becklyn\Menu\Target\LazyRoute;
 use PHPUnit\Framework\TestCase;
 
@@ -348,5 +347,66 @@ class MenuItemTest extends TestCase
         self::assertTrue($both->isCurrent());
         self::assertTrue($both->isCurrentAncestor());
         self::assertTrue($both->isAnyCurrent());
+    }
+
+
+    /**
+     *
+     */
+    public function testRemoveChild () : void
+    {
+        $root = new MenuItem();
+        $child = $root->createChild("1");
+        $otherRoot = new MenuItem();
+        $otherChild = $otherRoot->createChild("other");
+
+        self::assertCount(1, $root->getChildren());
+        self::assertSame($child, $root->getChildren()[0]);
+        self::assertSame($root, $child->getParent());
+        self::assertCount(1, $otherRoot->getChildren());
+        self::assertSame($otherChild, $otherRoot->getChildren()[0]);
+        self::assertSame($otherRoot, $otherChild->getParent());
+
+        // should change nothing -> wrong parent
+        $root->removeChild($otherChild);
+
+        self::assertCount(1, $root->getChildren());
+        self::assertSame($child, $root->getChildren()[0]);
+        self::assertSame($root, $child->getParent());
+        self::assertCount(1, $otherRoot->getChildren());
+        self::assertSame($otherChild, $otherRoot->getChildren()[0]);
+        self::assertSame($otherRoot, $otherChild->getParent());
+
+        $root->removeChild($child);
+
+        self::assertCount(0, $root->getChildren());
+        self::assertSame(null, $child->getParent());
+        self::assertCount(1, $otherRoot->getChildren());
+        self::assertSame($otherChild, $otherRoot->getChildren()[0]);
+        self::assertSame($otherRoot, $otherChild->getParent());
+    }
+
+
+    /**
+     *
+     */
+    public function testRemoveAllChildren () : void
+    {
+        $root = new MenuItem();
+        $child1 = $root->createChild("1");
+        $child2 = $root->createChild("2");
+
+        self::assertContains($child1, $root->getChildren());
+        self::assertContains($child2, $root->getChildren());
+        self::assertSame($root, $child1->getParent());
+        self::assertSame($root, $child2->getParent());
+
+        $root->removeAllChildren();
+
+
+
+        self::assertEmpty($root->getChildren());
+        self::assertSame(null, $child1->getParent());
+        self::assertSame(null, $child2->getParent());
     }
 }

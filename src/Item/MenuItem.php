@@ -649,6 +649,7 @@ class MenuItem
         if (false !== $index)
         {
             \array_splice($this->children, $index, 1, null);
+            $child->setParent(null);
         }
 
         return $this;
@@ -850,5 +851,19 @@ class MenuItem
     public function isAnyCurrent () : bool
     {
         return $this->current || $this->currentAncestor;
+    }
+
+
+    /**
+     * Removes all children
+     */
+    public function removeAllChildren () : void
+    {
+        foreach ($this->children as $child)
+        {
+            $child->setParent(null);
+        }
+
+        $this->children = [];
     }
 }
