@@ -3,7 +3,6 @@
 namespace Tests\Becklyn\Menu\Item;
 
 use Becklyn\Menu\Item\MenuItem;
-use Becklyn\Menu\Sorter\MenuItemSorter;
 use Becklyn\Menu\Target\LazyRoute;
 use PHPUnit\Framework\TestCase;
 
