@@ -349,4 +349,25 @@ class MenuItemTest extends TestCase
         self::assertTrue($both->isCurrentAncestor());
         self::assertTrue($both->isAnyCurrent());
     }
+
+
+    public function testRemoveAll ()
+    {
+        $root = new MenuItem();
+        $child1 = $root->createChild("1");
+        $child2 = $root->createChild("2");
+
+        self::assertContains($child1, $root->getChildren());
+        self::assertContains($child2, $root->getChildren());
+        self::assertSame($root, $child1->getParent());
+        self::assertSame($root, $child2->getParent());
+
+        $root->removeAllChildren();
+
+
+
+        self::assertEmpty($root->getChildren());
+        self::assertSame(null, $child1->getParent());
+        self::assertSame(null, $child2->getParent());
+    }
 }

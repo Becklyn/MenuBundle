@@ -851,4 +851,18 @@ class MenuItem
     {
         return $this->current || $this->currentAncestor;
     }
+
+
+    /**
+     * Removes all children
+     */
+    public function removeAllChildren () : void
+    {
+        foreach ($this->children as $child)
+        {
+            $child->setParent(null);
+        }
+
+        $this->children = [];
+    }
 }

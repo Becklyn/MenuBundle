@@ -1,3 +1,9 @@
+2.1.1
+=====
+
+*   (improvement) Added `MenuItem::removeAllChildren()`.
+
+
 2.1.0
 =====
 
