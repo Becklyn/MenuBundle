@@ -85,7 +85,7 @@
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block item_wrap -%}
-    {%- set attributes = item.listItemAttributes -%}
+    {%- set attributes = item.linkAttributes -%}
     {%- set target = item.target -%}
 
     {{- block("item") -}}
@@ -95,34 +95,24 @@
 {#-
  #  Renders the content of a single item (link or span basically)
  #
+ #  @var array attributes
  #  @var string|null target
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block item -%}
-    {{- target is not null ? block("link_item_wrap") : block("text_element_wrap") -}}
+    {{- target is not null ? block("link_item") : block("text_item") -}}
 {%- endblock item -%}
 
 
 {# ------------------------------------------------------------------------------------------------------------------ #}
 {# Link item (<a>) #}
 {# ------------------------------------------------------------------------------------------------------------------ #}
-{#-
- #  WrapperThe content of an item, if it is a link
- #
- #  @var string|null target
- #  @var \Becklyn\Menu\Item\MenuItem item
--#}
-{%- block link_item_wrap -%}
-    {%- set attributes = item.linkAttributes -%}
-
-    {{- block("link_item") -}}
-{%- endblock link_item_wrap -%}
 
 {#-
  #  The content of an item, if it is a link
  #
  #  @var array attributes
- #  @var string|null target
+ #  @var string target
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block link_item -%}
@@ -133,16 +123,6 @@
 {# ------------------------------------------------------------------------------------------------------------------ #}
 {# Text item (<span>) #}
 {# ------------------------------------------------------------------------------------------------------------------ #}
-{#-
- #  The content of an item, if it is not a link
- #
- #  @var \Becklyn\Menu\Item\MenuItem item
--#}
-{%- block text_element_wrap -%}
-    {%- set attributes = item.linkAttributes -%}
-
-    {{- block("text_element") -}}
-{%- endblock -%}
 
 {#-
  #  The content of an item, if it is not a link
@@ -150,7 +130,7 @@
  #  @var array attributes
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
-{%- block text_element -%}
+{%- block text_item -%}
     <span{{ _self.attributes(attributes) }}>{{ block("label") }}</span>
 {%- endblock -%}
 
