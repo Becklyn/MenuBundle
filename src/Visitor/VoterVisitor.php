@@ -26,8 +26,8 @@ class VoterVisitor implements ItemVisitor
      */
     public function visit (MenuItem $item, array $options) : void
     {
-        // only apply voters if the item isn't yet marked as "current" from the construction
-        if (!$item->isCurrent())
+        // only apply voters if the item isn't yet marked as anything from the construction
+        if (!$item->hasCurrentSet())
         {
             foreach ($this->voters as $voter)
             {
