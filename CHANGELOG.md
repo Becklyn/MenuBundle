@@ -1,3 +1,10 @@
+2.1.3
+=====
+
+*   (improvement) Made `$name` in `MenuItem::createChild()` nullable.
+*   (improvement) Added empty default state for `current` in MenuItems.
+ 
+
 2.1.2
 =====
 

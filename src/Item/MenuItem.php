@@ -121,9 +121,9 @@ class MenuItem
     /**
      * Whether the item is the currently selected menu item.
      *
-     * @var bool
+     * @var bool|null
      */
-    private $current = false;
+    private $current;
 
 
     /**
@@ -544,7 +544,7 @@ class MenuItem
      */
     public function isCurrent () : bool
     {
-        return $this->current;
+        return true === $this->current;
     }
 
 
@@ -555,6 +555,14 @@ class MenuItem
     {
         $this->current = $current;
         return $this;
+    }
+
+
+    /**
+     */
+    public function hasCurrentSet () : bool
+    {
+        return null !== $this->current;
     }
     //endregion
 
@@ -590,9 +598,9 @@ class MenuItem
     //region $this->children
     /**
      */
-    public function createChild (string $name, array $options = []) : self
+    public function createChild (?string $label = null, array $options = []) : self
     {
-        $child = new self($name, $options);
+        $child = new self($label, $options);
         $child->parent = $this;
         $this->children[] = $child;
 
