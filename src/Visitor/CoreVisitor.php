@@ -22,7 +22,7 @@ class CoreVisitor implements ItemVisitor
 
 
     /**
-     * @var AuthorizationCheckerInterface
+     * @var AuthorizationCheckerInterface|null
      */
     private $authorizationChecker;
 
@@ -43,7 +43,7 @@ class CoreVisitor implements ItemVisitor
      */
     public function __construct (
         UrlGeneratorInterface $urlGenerator,
-        AuthorizationCheckerInterface $authorizationChecker,
+        ?AuthorizationCheckerInterface $authorizationChecker,
         LoggerInterface $logger,
         bool $isDebug
     )
@@ -63,7 +63,7 @@ class CoreVisitor implements ItemVisitor
         $target = $item->getTarget();
 
         // check security
-        if (null !== $item->getSecurity())
+        if (null !== $this->authorizationChecker && null !== $item->getSecurity())
         {
             if (!$this->authorizationChecker->isGranted(new Expression($item->getSecurity())))
             {
