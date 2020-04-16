@@ -1,3 +1,10 @@
+2.1.4
+=====
+
+*   (bug) The `CoreVisitor` now has no (hidden) hard dependency on `symfony/security-core` anymore.
+*   (bug) The `TranslationVisitor` now has no (hidden) hard dependency on `symfony/translation-contracts` anymore.
+
+
 2.1.3
 =====
 

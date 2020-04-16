@@ -8,14 +8,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TranslationVisitor implements ItemVisitor
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|null
      */
     private $translator;
 
 
     /**
      */
-    public function __construct (TranslatorInterface $translator)
+    public function __construct (?TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
@@ -26,6 +26,7 @@ class TranslationVisitor implements ItemVisitor
      */
     public function visit (MenuItem $item, array $options) : void
     {
+        \assert($this->translator !== null);
         $label = $item->getLabel();
 
         if (null !== $label)
@@ -40,6 +41,6 @@ class TranslationVisitor implements ItemVisitor
      */
     public function supports (array $options) : bool
     {
-        return null !== $options["translationDomain"];
+        return null !== $options["translationDomain"] && null !== $this->translator;
     }
 }
