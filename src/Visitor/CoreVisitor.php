@@ -77,6 +77,7 @@ class CoreVisitor implements ItemVisitor
         {
             // store the previous route in an extra attribute
             $item->setExtra("_route", $target->getRoute());
+            $item->setExtra("_route_params", $target->getParameters());
 
             if ($item->isVisible())
             {

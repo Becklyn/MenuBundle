@@ -1,3 +1,11 @@
+3.0.0
+=====
+
+*   (bc) Disable all predefined route voters by default. See `UPGRADE` for details.
+*   (improvement) Added ability for `SimpleRouteVoter` to also compare route parameters.
+*   (improvement) Also store the route parameters for lazy routes in the `_route_params` extra.
+
+
 2.1.5
 =====
 

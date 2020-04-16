@@ -1,3 +1,10 @@
+2.x to 3.0
+==========
+
+*   There are no automatically registered voters anymore. To have the same behavior as before, create a class that
+    extends `SimpleRouteVoter`.
+
+
 2.x to 2.1.1
 ============
 
