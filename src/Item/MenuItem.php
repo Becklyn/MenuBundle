@@ -874,4 +874,13 @@ class MenuItem
 
         $this->children = [];
     }
+
+
+    /**
+     * Returns whether the item has children
+     */
+    public function hasChildren () : bool
+    {
+        return !empty($this->children);
+    }
 }

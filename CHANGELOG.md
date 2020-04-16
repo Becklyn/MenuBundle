@@ -1,3 +1,9 @@
+2.1.5
+=====
+
+*   (improvement) Add `MenuItem::hasChildren()` convenience getter.
+
+
 2.1.4
 =====
 
