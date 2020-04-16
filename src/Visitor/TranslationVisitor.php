@@ -26,7 +26,7 @@ class TranslationVisitor implements ItemVisitor
      */
     public function visit (MenuItem $item, array $options) : void
     {
-        \assert($this->translator !== null);
+        \assert(null !== $this->translator);
         $label = $item->getLabel();
 
         if (null !== $label)
