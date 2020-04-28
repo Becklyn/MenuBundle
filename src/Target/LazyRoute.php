@@ -77,4 +77,33 @@ class LazyRoute
     {
         return $urlGenerator->generate($this->route, $this->parameters, $this->referenceType);
     }
+
+
+    /**
+     * @return static
+     */
+    public function withParameters (array $parameters) : self
+    {
+        $modified = clone $this;
+        $modified->parameters = \array_replace($modified->parameters, $this->normalizeParameters($parameters));
+        return $modified;
+    }
+
+
+    /**
+     * Normalizes the parameters
+     */
+    private function normalizeParameters (array $parameters) : array
+    {
+        $normalized = [];
+
+        foreach ($parameters as $key => $value)
+        {
+            $normalized[$key] = \method_exists($value, "getId")
+                ? $value->getId()
+                : $value;
+        }
+
+        return $normalized;
+    }
 }

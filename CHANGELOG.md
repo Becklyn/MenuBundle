@@ -1,3 +1,8 @@
+next-minor
+==========
+*   (improvement) Added `LazyRoute::withParameters()` to simplify adding parameters.
+
+
 3.0.0
 =====
 
