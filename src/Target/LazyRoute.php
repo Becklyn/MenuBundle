@@ -39,7 +39,7 @@ class LazyRoute
     public function __construct (string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         $this->route = $route;
-        $this->parameters = $parameters;
+        $this->parameters = $this->normalizeParameters($parameters);
         $this->referenceType = $referenceType;
     }
 
