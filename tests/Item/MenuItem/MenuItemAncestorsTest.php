@@ -50,6 +50,8 @@ class MenuItemAncestorsTest extends TestCase
         self::assertSame($child, $parent2->getChildren()[0]);
         self::assertSame($parent2, $child->getParent());
     }
+
+
     /**
      *
      */

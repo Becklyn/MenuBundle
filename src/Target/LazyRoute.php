@@ -39,7 +39,7 @@ class LazyRoute
     public function __construct (string $route, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         $this->route = $route;
-        $this->parameters = $parameters;
+        $this->parameters = $this->normalizeParameters($parameters);
         $this->referenceType = $referenceType;
     }
 
@@ -76,5 +76,35 @@ class LazyRoute
     public function generate (UrlGeneratorInterface $urlGenerator) : string
     {
         return $urlGenerator->generate($this->route, $this->parameters, $this->referenceType);
+    }
+
+
+    /**
+     * @return static
+     */
+    public function withParameters (array $parameters) : self
+    {
+        $modified = clone $this;
+        $modified->parameters = \array_replace($modified->parameters, $this->normalizeParameters($parameters));
+        return $modified;
+    }
+
+
+    /**
+     * Normalizes the parameters
+     */
+    private function normalizeParameters (array $parameters) : array
+    {
+        $normalized = [];
+
+        foreach ($parameters as $key => $value)
+        {
+            // automatically integrate with entities, so that you can just pass the entity and it will automatically use its id
+            $normalized[$key] = \is_object($value) && \method_exists($value, "getId")
+                ? $value->getId()
+                : $value;
+        }
+
+        return $normalized;
     }
 }
