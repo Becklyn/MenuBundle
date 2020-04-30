@@ -99,7 +99,8 @@ class LazyRoute
 
         foreach ($parameters as $key => $value)
         {
-            $normalized[$key] = \method_exists($value, "getId")
+            // automatically integrate with entities, so that you can just pass the entity and it will automatically use its id
+            $normalized[$key] = \is_object($value) && \method_exists($value, "getId")
                 ? $value->getId()
                 : $value;
         }
