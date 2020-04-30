@@ -24,6 +24,7 @@ class LazyRouteGenerateTest extends TestCase
             ->willReturn("result");
 
         $route = new LazyRoute("route_name", ["param1" => "a", "param2" => "b"], UrlGeneratorInterface::NETWORK_PATH);
-        $route->generate($router);
+
+        self::assertSame("result", $route->generate($router));
     }
 }
