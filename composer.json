@@ -1,15 +1,15 @@
 {
     "name": "becklyn/menu",
-    "type": "symfony-bundle",
     "description": "Menu bundle for generating and rendering menus in Symfony.",
-    "homepage": "https://github.com/Becklyn/",
     "license": "BSD-3-Clause",
+    "type": "symfony-bundle",
     "authors": [
         {
             "name": "Becklyn Studios",
             "homepage": "http://becklyn.com/"
         }
     ],
+    "homepage": "https://github.com/Becklyn/",
     "require": {
         "php": ">=7.4",
         "psr/log": "^1.1.4",
@@ -28,15 +28,6 @@
         "symfony/dom-crawler": "^5.4.3 || ^6.0.3",
         "symfony/phpunit-bridge": "^5.4.3 || ^6.0.3"
     },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.x-dev",
-            "dev-next": "2.x-dev"
-        }
-    },
     "autoload": {
         "psr-4": {
             "Becklyn\\Menu\\": "src/"
@@ -45,6 +36,15 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\Becklyn\\Menu\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev",
+            "dev-next": "2.x-dev"
         }
     }
 }
