@@ -11,22 +11,22 @@
         }
     ],
     "require": {
-        "php": "^7.2",
-        "psr/log": "^1.1",
-        "symfony/config": "^4.3 || ^5.0",
-        "symfony/dependency-injection": "^4.3 || ^5.0",
-        "symfony/expression-language": "^4.3 || ^5.0",
-        "symfony/http-kernel": "^4.3 || ^5.0",
-        "symfony/phpunit-bridge": "^5.0",
-        "symfony/routing": "^4.3 || ^5.0",
-        "symfony/security-core": "^4.3 || ^5.0",
-        "symfony/translation-contracts": "^1.1 || ^2.0",
-        "twig/twig": "^2.11 || ^3.0"
+        "php": ">=7.4",
+        "psr/log": "^1.1.4",
+        "symfony/config": "^5.4.3 || ^6.0.3",
+        "symfony/dependency-injection": "^5.4.3 || ^6.0.3",
+        "symfony/expression-language": "^5.4.3 || ^6.0.3",
+        "symfony/http-kernel": "^5.4.4 || ^6.0.4",
+        "symfony/routing": "^5.4.3 || ^6.0.3",
+        "symfony/security-core": "^5.4.3 || ^6.0.3",
+        "symfony/translation-contracts": "^1.1.0 || ^2.0.0 || ^3.0.0",
+        "twig/twig": "^3.3.8"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
-        "symfony/css-selector": "^5.0",
-        "symfony/dom-crawler": "^5.0"
+        "symfony/css-selector": "^5.4.3 || ^6.0.3",
+        "symfony/dom-crawler": "^5.4.3 || ^6.0.3",
+        "symfony/phpunit-bridge": "^5.4.3 || ^6.0.3"
     },
     "config": {
         "sort-packages": true

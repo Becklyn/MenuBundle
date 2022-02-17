@@ -10,15 +10,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class SimpleRouteVoter implements VoterInterface
 {
-    /** @var RequestStack */
-    private $requestStack;
-
-    /** @var bool */
-    private $alsoCheckParameters;
+    private RequestStack $requestStack;
+    private bool $alsoCheckParameters;
 
 
-    /**
-     */
     public function __construct (RequestStack $requestStack, bool $alsoCheckParameters = false)
     {
         $this->requestStack = $requestStack;
@@ -31,7 +26,7 @@ class SimpleRouteVoter implements VoterInterface
      */
     public function vote (MenuItem $item) : ?bool
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request)
         {

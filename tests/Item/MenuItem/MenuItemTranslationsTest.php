@@ -61,9 +61,18 @@ class MenuItemTranslationsTest extends TestCase
             /**
              * @inheritDoc
              */
-            public function trans ($id, array $parameters = [], $domain = null, $locale = null)
+            public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
             {
                 return "TRANS: {$id} ({$domain})";
+            }
+
+
+            /**
+             * @inheritDoc
+             */
+            public function getLocale () : string
+            {
+                return "de";
             }
         };
 
