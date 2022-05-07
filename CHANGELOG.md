@@ -1,3 +1,9 @@
+3.1.1
+=====
+
+*   (improvement) Add support for a wider range of PSR log implementations.
+
+
 3.1.0
 =====
 
