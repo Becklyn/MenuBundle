@@ -100,6 +100,7 @@
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block item -%}
+    {%- set target = item.target -%}
     {{- target is not null ? block("link_item") : block("text_item") -}}
 {%- endblock item -%}
 
@@ -116,6 +117,7 @@
  #  @var \Becklyn\Menu\Item\MenuItem item
 -#}
 {%- block link_item -%}
+    {%- set attributes = item.linkAttributes -%}
     <a href="{{ target }}"{{ _self.attributes(attributes) }}>{{ block("label") }}</a>
 {%- endblock link_item -%}
 
